@@ -1,0 +1,115 @@
+digraph {
+  "0" [
+    label = "0 | Start";
+    shape = "diamond";
+  ];
+  "1" [
+    label = "1 | Start";
+    shape = "diamond";
+  ];
+  "2" [
+    label = "2 | #weird_add";
+    shape = "rectangle";
+  ];
+  "3" [
+    label = "3 | Parameter #0";
+    shape = "rectangle";
+  ];
+  "4" [
+    label = "4 | Parameter #1";
+    shape = "rectangle";
+  ];
+  "5" [
+    label = "5 | Parameter #2";
+    shape = "rectangle";
+  ];
+  "6" [
+    label = "6 | Parameter #3";
+    shape = "rectangle";
+  ];
+  "7" [
+    label = "7 | +";
+    shape = "rectangle";
+  ];
+  "8" [
+    label = "8 | +";
+    shape = "rectangle";
+  ];
+  "9" [
+    label = "9 | +";
+    shape = "rectangle";
+  ];
+  "10" [
+    label = "10 | +";
+    shape = "rectangle";
+  ];
+  "11" [
+    label = "11 | +";
+    shape = "rectangle";
+  ];
+  "12" [
+    label = "12 | Return";
+    shape = "diamond";
+  ];
+  "13" [
+    label = "13 | Return";
+    shape = "diamond";
+  ];
+  "0" -> "13" [
+    label = "next";
+    arrowhead = "normal";
+  ];
+  "1" -> "12" [
+    label = "next";
+    arrowhead = "normal";
+  ];
+  "2" -> "1" [
+    label = "start";
+    arrowhead = "vee";
+    style = "dashed";
+  ];
+  "7" -> "3" [
+    label = "left";
+    arrowhead = "onormal";
+  ];
+  "7" -> "4" [
+    label = "right";
+    arrowhead = "onormal";
+  ];
+  "8" -> "4" [
+    label = "left";
+    arrowhead = "onormal";
+  ];
+  "8" -> "5" [
+    label = "right";
+    arrowhead = "onormal";
+  ];
+  "9" -> "3" [
+    label = "left";
+    arrowhead = "onormal";
+  ];
+  "9" -> "5" [
+    label = "right";
+    arrowhead = "onormal";
+  ];
+  "10" -> "7" [
+    label = "left";
+    arrowhead = "onormal";
+  ];
+  "10" -> "8" [
+    label = "right";
+    arrowhead = "onormal";
+  ];
+  "11" -> "7" [
+    label = "left";
+    arrowhead = "onormal";
+  ];
+  "11" -> "9" [
+    label = "right";
+    arrowhead = "onormal";
+  ];
+  "12" -> "11" [
+    label = "value";
+    arrowhead = "onormal";
+  ];
+}

@@ -1,0 +1,14 @@
+0,Start,Control,Start
+1,Start,Control,Start
+2,Symbol,Data,#weird_add
+3,Parameter,Data,Parameter #0
+4,Literal,Data,2
+5,Literal,Data,1
+6,Literal,Data,1.0
+7,BinaryOperation,Data,+
+8,BinaryOperation,Data,+
+9,BinaryOperation,Data,+
+10,BinaryOperation,Data,+
+11,BinaryOperation,Data,+
+12,Return,Control,Return
+13,Return,Control,Return

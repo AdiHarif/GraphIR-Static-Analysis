@@ -1,0 +1,101 @@
+
+#include "./graph_definitions.dl"
+
+
+// .decl known_types(id: number, type: symbol)
+// # .input known_types(filename="known_types.facts", delimiter=",")
+
+.decl function_return_type(function: symbol, type: symbol)
+// .input function_return_type(filename="function_return_type.facts", delimiter=",")
+.decl function_parameters_type(function: symbol, parameter: symbol, type: symbol)
+// .input function_parameters_type(filename="function_parameters_type.facts", delimiter=",")
+.decl function_parameter(function: symbol, vertex: number, index: symbol)
+.input function_parameter(filename="function_parameter.facts", delimiter=",")
+
+.decl function_return(function: symbol, vertex: number)
+.input function_return(filename="function_return.facts", delimiter=",")
+
+.functor is_numeric(value: symbol): number
+#define IS_NUMERIC(value) (@is_numeric(value) = 1)
+#define IS_STRING(value) (match("\".*\"", value))
+#define IS_BOOLEAN(value) (match("true|false", value))
+
+.decl numeric_operator(operator: symbol)
+numeric_operator("+").
+numeric_operator(">>").
+numeric_operator(">>>").
+
+.decl comparison_operator(operator: symbol)
+comparison_operator("==").
+comparison_operator("!=").
+
+.decl inferred_type(id: number, type: symbol)
+inferred_type(id, "number") :-
+    vertex(id, "Literal", _, value), IS_NUMERIC(value).
+inferred_type(id, "string") :-
+    vertex(id, "Literal", _, value), IS_STRING(value).
+inferred_type(id, "boolean") :-
+    vertex(id, "Literal", _, value), IS_BOOLEAN(value).
+
+inferred_type(id, "number") :-
+    vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator).
+inferred_type(id, type) :-
+    vertex(id, "Phi", _, _), inferred_type(arg, type),
+    (phi_args(id, arg, _) ; phi_args(id, _, arg)).
+
+inferred_type(id, "boolean") :-
+    vertex(id, "BinaryOperation", _, operator), comparison_operator(operator).
+
+inferred_type(id, "symbol") :- vertex(id, "Symbol", _, _).
+
+inferred_type(id, type) :-
+    vertex(id, "Parameter", _, _),
+    function_parameter(function, id, index),
+    function_parameters_type(function, index, type).
+
+inferred_type(id, type) :-
+    vertex(id, "Call", _, _),
+    edge(id, symbol_id, _, "callable"), vertex(symbol_id, "Symbol", _, function),
+    function_return_type(function, type).
+
+function_return_type(function, "undefined") :-
+    vertex(id, "Return", _, _),
+    function_return(function, id),
+    !edge(id, _, _, "value").
+
+function_return_type(function, type) :-
+    vertex(id, "Return", _, _),
+    function_return(function, id),
+    edge(id, value, _, "value"), inferred_type(value, type).
+
+function_parameters_type(function, index, type) :-
+    vertex(call, "Call", _, _),
+    edge(call, parameter, _, index), IS_NUMERIC(index),
+    inferred_type(parameter, type),
+    edge(call, callee, _, "callee"), vertex(callee, "Symbol", _, function).
+
+// .decl type_safe(id: number)
+// type_safe(id) :- vertex(id, "Literal", _, _).
+// type_safe(id) :- vertex(id, "Symbol", _, _).
+// type_safe(id) :- vertex(id, "Parameter", _, _), inferred_type(id, _).
+// type_safe(id) :-
+//     vertex(id, kind, _, operator), match(".*UnaryOperation", kind), numeric_operator(operator),
+//     edge(id, operand, _, "operand"), inferred_type(operand, "number"), type_safe(operand).
+// type_safe(id) :-
+//     vertex(id, "BinaryOperation", _, operator), (numeric_operator(operator) ; comparison_operator(operator)),
+//     edge(id, left, _, "left"), inferred_type(left, "number"), type_safe(left),
+//     edge(id, right, _, "right"), inferred_type(right, "number"), type_safe(right).
+// type_safe(id) :-
+//     vertex(id, "Phi", _, _), phi_args(id, arg1, arg2),
+//     inferred_type(arg1, type), type_safe(arg1),
+//     inferred_type(arg2, type), type_safe(arg2).
+
+// //.output inferred_type(filename="inferred_type.out", delimiter=",")
+// //.output type_safe(filename="type_safe.out", delimiter=",")
+
+// .decl type_unsafe(id: number)
+// type_unsafe(id) :- data_vertex(id), !type_safe(id).
+// .output type_unsafe(filename="type_unsafe.out", delimiter=",")
+// .output inferred_type(filename="inferred_type.out", delimiter=",")
+.output function_return_type(filename="function_return_type.out", delimiter=",")
+.output function_parameters_type(filename="function_parameters_type.out", delimiter=",")

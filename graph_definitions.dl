@@ -1,0 +1,28 @@
+
+.decl edge(src: number, dst: number, category: symbol, label: symbol)
+.input edge(filename="edges.facts", delimiter=",")
+
+.decl vertex(id: number, kind: symbol, category: symbol, label: symbol)
+.input vertex(filename="vertices.facts", delimiter=",")
+
+.decl data_vertex(v: number)
+data_vertex(v) :- vertex(v, _, "Data", _).
+data_vertex(v) :- vertex(v, _, "Compound", _).
+
+// ! phi_args asumes there are exactly two arguments to a phi node
+.decl phi_args(phi: number, arg1: number, arg2: number) choice-domain phi
+phi_args(phi, arg1, arg2) :-
+    vertex(phi, "Phi", _, _),
+    edge(phi, arg1, "Data", _),
+    edge(phi, arg2, "Data", _),
+    arg1 != arg2.
+
+
+.decl control_vertex(v: number)
+control_vertex(v) :- vertex(v, _, "Control", _).
+control_vertex(v) :- vertex(v, _, "Compound", _).
+
+.decl reaching(src: number, dest: number)
+reaching(a, a) :- control_vertex(a).
+reaching(a, b) :- reaching(a, mid), edge(mid, b, "Control", _).
+
