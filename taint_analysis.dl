@@ -2,7 +2,7 @@
 #include "./graph_definitions.dl"
 
 .decl tainting_vertex(id: number)
-.input tainting_vertex(filename="in.facts", delimiter=",")
+.input tainting_vertex(filename="in.csv", delimiter=",")
 
 .decl taints(src: number, dest: number)
 taints(a, a) :- data_vertex(a).
@@ -63,7 +63,7 @@ taints(cond, phi) :-
 
 .decl tainted_vertex(id: number)
 tainted_vertex(u) :- tainting_vertex(v), taints(v, u).
-.output tainted_vertex(filename="out.facts", delimiter=",")
+.output tainted_vertex(filename="out.csv", delimiter=",")
 
 
 

@@ -10,10 +10,10 @@
 .decl function_parameters_type(function: symbol, parameter: symbol, type: symbol)
 // .input function_parameters_type(filename="function_parameters_type.facts", delimiter=",")
 .decl function_parameter(function: symbol, vertex: number, index: symbol)
-.input function_parameter(filename="function_parameter.facts", delimiter=",")
+.input function_parameter(filename="function_parameter.csv", delimiter=",")
 
 .decl function_return(function: symbol, vertex: number)
-.input function_return(filename="function_return.facts", delimiter=",")
+.input function_return(filename="function_return.csv", delimiter=",")
 
 .functor is_numeric(value: symbol): number
 #define IS_NUMERIC(value) (@is_numeric(value) = 1)
