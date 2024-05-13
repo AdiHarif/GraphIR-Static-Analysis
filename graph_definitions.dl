@@ -1,4 +1,6 @@
 
+#pragma once
+
 .decl edge(src: number, dst: number, category: symbol, label: symbol)
 .input edge(filename="edges.csv", delimiter=",")
 

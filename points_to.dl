@@ -1,0 +1,16 @@
+
+#pragma once
+
+#include "./graph_definitions.dl"
+
+.decl function_parameter(function: symbol, vertex: number, index: symbol)
+.input function_parameter(filename="function_parameter.csv", delimiter=",")
+
+.decl points_to(from: number, to: number)
+
+points_to(v, v) :- data_vertex(v).
+points_to(v, u) :- points_to(v, w), points_to(w, u).
+
+points_to(phi, v) :-
+    vertex(phi, "Phi", _, _),
+    edge(phi, v, "Data", _).

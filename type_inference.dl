@@ -1,12 +1,9 @@
 
 #include "./graph_definitions.dl"
-
-
+#include "./points_to.dl"
 
 .decl function_return_type(function: symbol, type: symbol)
 .decl function_parameters_type(function: symbol, parameter: symbol, type: symbol)
-.decl function_parameter(function: symbol, vertex: number, index: symbol)
-.input function_parameter(filename="function_parameter.csv", delimiter=",")
 
 .decl function_return(function: symbol, vertex: number)
 .input function_return(filename="function_return.csv", delimiter=",")
@@ -58,6 +55,14 @@ inferred_type(id, type) :-
     edge(id, symbol_id, _, "callable"), vertex(symbol_id, "Symbol", _, function),
     function_return_type(function, type).
 
+inferred_type(id, type) :-
+    vertex(id, "Allocation", _, _),
+    edge(id, callee, _, "callee"),
+    vertex(callee, "Symbol", _, type).
+
+inferred_type(id, type) :-
+    points_to(id, to), inferred_type(to, type).
+
 function_return_type(function, "undefined") :-
     vertex(id, "Return", _, _),
     function_return(function, id),
@@ -75,3 +80,11 @@ function_parameters_type(function, index, type) :-
     edge(call, callee, _, "callee"), vertex(callee, "Symbol", _, function).
 
 .output inferred_type(filename="inferred_type.out", delimiter=",")
+
+.decl missing_type(id: number)
+missing_type(id) :-
+    vertex(id, _, category, _),
+    category != "Control",
+    !inferred_type(id, _).
+
+.output missing_type()
