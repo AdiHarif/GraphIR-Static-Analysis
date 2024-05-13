@@ -24,6 +24,10 @@ numeric_operator(">>>").
 .decl comparison_operator(operator: symbol)
 comparison_operator("==").
 comparison_operator("!=").
+comparison_operator("<").
+comparison_operator("<=").
+comparison_operator(">").
+comparison_operator(">=").
 
 .decl inferred_type(id: number, type: symbol)
 inferred_type(id, "number") :-
