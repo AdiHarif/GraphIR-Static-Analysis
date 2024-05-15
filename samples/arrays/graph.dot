@@ -1,0 +1,319 @@
+digraph {
+  subgraph "cluster_0" {
+    style = "dotted";
+    "0" [
+      label = "0 | Start";
+      shape = "diamond";
+    ];
+    "1" [
+      label = "1 | #arrays";
+      shape = "rectangle";
+    ];
+    "2" [
+      label = "2 | 1";
+      shape = "rectangle";
+    ];
+    "3" [
+      label = "3 | Call";
+      shape = "Mdiamond";
+    ];
+    "4" [
+      label = "4 | Return";
+      shape = "diamond";
+    ];
+    subgraph "cluster_1" {
+      style = "dotted";
+      "5" [
+        label = "5 | Start";
+        shape = "diamond";
+      ];
+      "6" [
+        label = "6 | #this";
+        shape = "rectangle";
+      ];
+      "7" [
+        label = "7 | Parameter #0";
+        shape = "rectangle";
+      ];
+      "8" [
+        label = "8 | #Array";
+        shape = "rectangle";
+      ];
+      "9" [
+        label = "9 | 1";
+        shape = "rectangle";
+      ];
+      "10" [
+        label = "10 | 2";
+        shape = "rectangle";
+      ];
+      "11" [
+        label = "11 | 3";
+        shape = "rectangle";
+      ];
+      "12" [
+        label = "12 | Allocation";
+        shape = "Mdiamond";
+      ];
+      "13" [
+        label = "13 | 4";
+        shape = "rectangle";
+      ];
+      "14" [
+        label = "14 | 5";
+        shape = "rectangle";
+      ];
+      "15" [
+        label = "15 | 6";
+        shape = "rectangle";
+      ];
+      "16" [
+        label = "16 | Allocation";
+        shape = "Mdiamond";
+      ];
+      "17" [
+        label = "17 | 7";
+        shape = "rectangle";
+      ];
+      "18" [
+        label = "18 | 8";
+        shape = "rectangle";
+      ];
+      "19" [
+        label = "19 | 9";
+        shape = "rectangle";
+      ];
+      "20" [
+        label = "20 | Allocation";
+        shape = "Mdiamond";
+      ];
+      "21" [
+        label = "21 | 0";
+        shape = "rectangle";
+      ];
+      "22" [
+        label = "22 | >";
+        shape = "rectangle";
+      ];
+      "23" [
+        label = "23 | Branch";
+        shape = "diamond";
+      ];
+      "24" [
+        label = "24 | BlockStart";
+        shape = "diamond";
+      ];
+      "25" [
+        label = "25 | BlockEnd";
+        shape = "diamond";
+      ];
+      "26" [
+        label = "26 | BlockStart";
+        shape = "diamond";
+      ];
+      "27" [
+        label = "27 | BlockEnd";
+        shape = "diamond";
+      ];
+      "28" [
+        label = "28 | Phi";
+        shape = "rectangle";
+      ];
+      "29" [
+        label = "29 | Merge";
+        shape = "diamond";
+      ];
+      "30" [
+        label = "30 | push";
+        shape = "rectangle";
+      ];
+      "31" [
+        label = "31 | Load";
+        shape = "Mdiamond";
+      ];
+      "32" [
+        label = "32 | 10";
+        shape = "rectangle";
+      ];
+      "33" [
+        label = "33 | Call";
+        shape = "Mdiamond";
+      ];
+      "34" [
+        label = "34 | Return";
+        shape = "diamond";
+      ];
+      "5" -> "12" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "12" -> "16" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "12" -> "8" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "12" -> "9" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "12" -> "10" [
+        label = "1";
+        arrowhead = "onormal";
+      ];
+      "12" -> "11" [
+        label = "2";
+        arrowhead = "onormal";
+      ];
+      "16" -> "20" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "16" -> "8" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "16" -> "13" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "16" -> "14" [
+        label = "1";
+        arrowhead = "onormal";
+      ];
+      "16" -> "15" [
+        label = "2";
+        arrowhead = "onormal";
+      ];
+      "20" -> "23" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "20" -> "8" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "20" -> "17" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "20" -> "18" [
+        label = "1";
+        arrowhead = "onormal";
+      ];
+      "20" -> "19" [
+        label = "2";
+        arrowhead = "onormal";
+      ];
+      "22" -> "7" [
+        label = "left";
+        arrowhead = "onormal";
+      ];
+      "22" -> "21" [
+        label = "right";
+        arrowhead = "onormal";
+      ];
+      "23" -> "22" [
+        label = "condition";
+        arrowhead = "onormal";
+      ];
+      "23" -> "24" [
+        label = "true";
+        arrowhead = "normal";
+      ];
+      "23" -> "26" [
+        label = "false";
+        arrowhead = "normal";
+      ];
+      "24" -> "25" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "25" -> "29" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "26" -> "27" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "27" -> "29" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "28" -> "12" [
+        label = "25";
+        arrowhead = "onormal";
+      ];
+      "28" -> "16" [
+        label = "27";
+        arrowhead = "onormal";
+      ];
+      "28" -> "29" [
+        label = "merge";
+        arrowhead = "vee";
+        style = "dashed";
+      ];
+      "29" -> "31" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "29" -> "23" [
+        label = "branch";
+        arrowhead = "vee";
+        style = "dashed";
+      ];
+      "31" -> "33" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "31" -> "28" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "31" -> "30" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "33" -> "34" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "33" -> "31" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "33" -> "32" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "34" -> "12" [
+        label = "value";
+        arrowhead = "onormal";
+      ];
+    }
+    "0" -> "3" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "1" -> "5" [
+      label = "start";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "3" -> "4" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "3" -> "1" [
+      label = "callee";
+      arrowhead = "onormal";
+    ];
+    "3" -> "2" [
+      label = "0";
+      arrowhead = "onormal";
+    ];
+  }
+}
