@@ -2,12 +2,6 @@
 #include "./graph_definitions.dl"
 #include "./points_to.dl"
 
-.decl function_return_type(function: symbol, type: symbol)
-.decl function_parameters_type(function: symbol, parameter: symbol, type: symbol)
-
-.decl function_return(function: symbol, vertex: number)
-.input function_return(filename="function_return.csv", delimiter=",")
-
 .functor is_numeric(value: symbol): number
 #define IS_NUMERIC(value) (@is_numeric(value) = 1)
 #define IS_STRING(value) (match("\".*\"", value))

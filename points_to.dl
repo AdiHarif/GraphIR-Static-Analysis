@@ -3,9 +3,6 @@
 
 #include "./graph_definitions.dl"
 
-.decl function_parameter(function: symbol, vertex: number, index: symbol)
-.input function_parameter(filename="function_parameter.csv", delimiter=",")
-
 .decl points_to(from: number, to: number)
 
 points_to(v, v) :- data_vertex(v).
