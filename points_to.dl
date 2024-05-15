@@ -5,9 +5,16 @@
 
 .decl points_to(from: number, to: number)
 
-points_to(v, v) :- data_vertex(v).
+//points_to(v, v) :- data_vertex(v).
 points_to(v, u) :- points_to(v, w), points_to(w, u).
 
 points_to(phi, v) :-
     vertex(phi, "Phi", _, _),
     edge(phi, v, "Data", _).
+
+points_to(call, ret_value) :-
+    vertex(call, "Call", _, _),
+    edge(call, symbol_vertex, _, "callee"),
+    vertex(symbol_vertex, _, _, function),
+    function_return(function, ret),
+    edge(ret, ret_value, _, "value").
