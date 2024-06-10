@@ -19,6 +19,12 @@ may_refer_to(call, ret_value) :-
     function_return(function, ret),
     edge(ret, ret_value, _, "value").
 
+may_refer_to(parameter, argument) :-
+    function_parameter(function, parameter, index),
+    vertex(call, "Call", _, _),
+    edge(call, symbol, _, "callee"),
+    vertex(symbol, "Symbol", _, function),
+    edge(call, argument, _, index).
 
 .decl points_to(pointer: number, pointee: number, field: symbol)
 
