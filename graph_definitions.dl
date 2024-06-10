@@ -32,7 +32,13 @@ reaching(a, b) :- reaching(a, mid), edge(mid, b, "Control", _).
 .decl function_parameters_type(function: symbol, parameter: symbol, type: symbol)
 
 .decl function_return(function: symbol, vertex: number)
-.input function_return(filename="function_return.csv", delimiter=",")
+// .input function_return(filename="function_return.csv", delimiter=",")
+function_return(function, return) :-
+    vertex(return, "Return", _, _),
+    vertex(start, "Start", _, _),
+    reaching(start, return),
+    vertex(symbol, "Symbol", _, function),
+    edge(symbol, start, _, _).
 
 .decl function_parameter(function: symbol, vertex: number, index: symbol)
 .input function_parameter(filename="function_parameter.csv", delimiter=",")
