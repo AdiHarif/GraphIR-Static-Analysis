@@ -1,0 +1,17 @@
+
+#include "./graph_definitions.dl"
+#include "./type_inference.dl"
+#include "./points_to.dl"
+
+.decl array_element_type(array: number, type: symbol)
+
+array_element_type(array, type) :-
+    vertex(array, "Allocation", _, _),
+    inferred_type(array, "Array"),
+    vertex(store, "Store", _, _),
+    edge(store, array_ref, _, "object"),
+    may_refer_to(array_ref, array),
+    edge(store, value, _, "value"),
+    inferred_type(value, type).
+
+.output array_element_type()
