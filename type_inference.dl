@@ -1,11 +1,7 @@
 
 #include "./graph_definitions.dl"
 #include "./points_to.dl"
-
-.functor is_numeric(value: symbol): number
-#define IS_NUMERIC(value) (@is_numeric(value) = 1)
-#define IS_STRING(value) (match("\".*\"", value))
-#define IS_BOOLEAN(value) (match("true|false", value))
+#include "./utilities.dl"
 
 .decl numeric_operator(operator: symbol)
 numeric_operator("+").
