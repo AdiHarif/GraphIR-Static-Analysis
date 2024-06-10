@@ -1,20 +1,41 @@
 
-#pragma once
+
 
 #include "./graph_definitions.dl"
 
-.decl points_to(from: number, to: number)
+.decl may_refer_to(from: number, to: number)
 
-//points_to(v, v) :- data_vertex(v).
-points_to(v, u) :- points_to(v, w), points_to(w, u).
+may_refer_to(v, v) :- data_vertex(v).
+may_refer_to(v, u) :- may_refer_to(v, w), may_refer_to(w, u).
 
-points_to(phi, v) :-
+may_refer_to(phi, v) :-
     vertex(phi, "Phi", _, _),
     edge(phi, v, "Data", _).
 
-points_to(call, ret_value) :-
+may_refer_to(call, ret_value) :-
     vertex(call, "Call", _, _),
     edge(call, symbol_vertex, _, "callee"),
     vertex(symbol_vertex, _, _, function),
     function_return(function, ret),
     edge(ret, ret_value, _, "value").
+
+
+.decl points_to(pointer: number, pointee: number, field: symbol)
+
+points_to(pointer, pointee, "*") :- // TODO: add field sensitivity
+    vertex(store, "Store", _, _),
+    edge(store, pointee_ref, _, "value"),
+    edge(store, pointer_ref, _, "object"),
+    vertex(pointer, "Allocation", _, _),
+    vertex(pointee, "Allocation", _, _),
+    may_refer_to(pointer_ref, pointer),
+    may_refer_to(pointee_ref, pointee).
+
+points_to(pointer, pointee, "*") :- // TODO: add field sensitivity
+    vertex(pointer, "Allocation", _, _),
+    vertex(pointee, "Allocation", _, _),
+    may_refer_to(pointee, pointee_ref),
+    edge(pointer, pointee_ref, "Data", _).
+
+.output may_refer_to()
+.output points_to()

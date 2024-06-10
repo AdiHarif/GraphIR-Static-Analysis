@@ -55,7 +55,7 @@ inferred_type(id, type) :-
     vertex(callee, "Symbol", _, type).
 
 inferred_type(id, type) :-
-    points_to(id, to), inferred_type(to, type).
+    may_refer_to(id, to), inferred_type(to, type).
 
 function_return_type(function, "undefined") :-
     vertex(id, "Return", _, _),
