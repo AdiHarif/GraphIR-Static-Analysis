@@ -69,7 +69,7 @@ function_parameters_type(function, index, type) :-
     inferred_type(parameter, type),
     edge(call, callee, _, "callee"), vertex(callee, "Symbol", _, function).
 
-.output inferred_type(filename="inferred_type.out", delimiter=",")
+.output inferred_type()
 
 .decl missing_type(id: number)
 missing_type(id) :-
