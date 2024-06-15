@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "./graph_definitions.dl"
 #include "./points_to.dl"
 #include "./utilities.dl"

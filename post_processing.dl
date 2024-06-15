@@ -1,0 +1,26 @@
+
+#include "type_inference.dl"
+#include "arrays.dl"
+#include "points_to.dl"
+
+.decl full_type(vertex: number, type: symbol)
+
+.decl primitive_type_conversion(source_type: symbol, target_type: symbol)
+primitive_type_conversion("number", "Float64").
+primitive_type_conversion("boolean", "Integer1").
+
+full_type(v, target) :-
+    inferred_type(v, source),
+    primitive_type_conversion(source, target).
+
+full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
+    inferred_type(v, "Array"),
+    array_element_type(v, source_type),
+    primitive_type_conversion(source_type, element_type).
+
+full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
+    inferred_type(v, "Array"),
+    points_to(v, element, _),
+    full_type(element, element_type).
+
+.output full_type()
