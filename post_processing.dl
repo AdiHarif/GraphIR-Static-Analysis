@@ -15,12 +15,14 @@ full_type(v, target) :-
 
 full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
     inferred_type(v, "Array"),
-    array_element_type(v, source_type),
+    may_refer_to(v, alloc),
+    array_element_type(alloc, source_type),
     primitive_type_conversion(source_type, element_type).
 
 full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
     inferred_type(v, "Array"),
-    points_to(v, element, _),
+    may_refer_to(v, alloc),
+    points_to(alloc, element, _),
     full_type(element, element_type).
 
 .output full_type()
