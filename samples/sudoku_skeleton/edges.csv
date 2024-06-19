@@ -1,6 +1,12 @@
 0,4,Control,next
 1,6,Association,start
+1,8,Association,0
+1,9,Association,1
+1,10,Association,2
 2,16,Association,start
+2,18,Association,0
+2,19,Association,1
+2,20,Association,2
 3,61,Association,start
 4,5,Control,next
 4,3,Data,callee

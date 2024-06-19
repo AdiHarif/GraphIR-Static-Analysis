@@ -804,8 +804,38 @@ digraph {
       arrowhead = "vee";
       style = "dashed";
     ];
+    "1" -> "8" [
+      label = "0";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "1" -> "9" [
+      label = "1";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "1" -> "10" [
+      label = "2";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
     "2" -> "16" [
       label = "start";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "2" -> "18" [
+      label = "0";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "2" -> "19" [
+      label = "1";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "2" -> "20" [
+      label = "2";
       arrowhead = "vee";
       style = "dashed";
     ];
