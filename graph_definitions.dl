@@ -41,4 +41,7 @@ function_return(function, return) :-
     edge(symbol, start, _, _).
 
 .decl function_parameter(function: symbol, vertex: number, index: symbol)
-.input function_parameter(filename="function_parameter.csv", delimiter=",")
+function_parameter(function, parameter, index) :-
+    vertex(symbol, "Symbol", _, function),
+    vertex(parameter, "Parameter", _, _),
+    edge(symbol, parameter, "Association", index).
