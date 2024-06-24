@@ -1,0 +1,9 @@
+
+#pragma once
+
+.type SymbolList = [ hd: symbol, tl: SymbolList ]
+
+.functor list_append(l: SymbolList, s: symbol): SymbolList stateful
+.functor list_contains(l: SymbolList, s: symbol): unsigned stateful
+
+.functor list_join_by_string(l: SymbolList, sep: symbol): symbol stateful
