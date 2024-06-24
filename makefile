@@ -4,6 +4,6 @@
 run:
 	souffle -Fsamples/multi_function -D- type_inference.dl
 
-functors: functors.cpp
-	g++ functors.cpp -c -fPIC -o functors.o
-	g++ -shared -o libfunctors.so functors.o
+functors:
+	g++ -c -fPIC src/functors/*.cpp
+	g++ -shared -o libfunctors.so functors.o set_functors.o list_functors.o
