@@ -9,6 +9,7 @@
 .decl primitive_type_conversion(source_type: symbol, target_type: symbol)
 primitive_type_conversion("number", "Float64").
 primitive_type_conversion("boolean", "Integer1").
+primitive_type_conversion("undefined", "Void").
 
 full_type(v, target) :-
     inferred_type(v, source),
