@@ -2,6 +2,7 @@
 #include "type_inference.dl"
 #include "arrays.dl"
 #include "points_to.dl"
+#include "src/symbol_list.dl"
 
 .decl full_type(vertex: number, type: symbol)
 
@@ -25,4 +26,29 @@ full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
     points_to(alloc, element, _),
     full_type(element, element_type).
 
-.output full_type()
+
+.decl params_list(function_vertex: number, params: SymbolList, amount: number)
+
+params_list(function_vertex, nil, 0) :-
+    vertex(function_vertex, "Symbol", _, _),
+    edge(function_vertex, _, _, "start").
+
+params_list(function_vertex, @list_append(params, type), n + 1) :-
+    params_list(function_vertex, params, n),
+    edge(function_vertex, param_vertex, _, to_string(n)),
+    full_type(param_vertex, type).
+
+params_list(f, _, n1) <= params_list(f, _, n2) :- n1 < n2.
+
+full_type(function_vertex, type) :-
+    vertex(function_vertex, _, _, function_name),
+    params_list(function_vertex, p_list, _),
+    params = cat("[", cat(@list_join_by_string(p_list, ","), "]")),
+    function_return_type(function_name, return_type),
+    primitive_type_conversion(return_type, full_return_type),
+    type = cat(params, cat("->", full_return_type)).
+
+// TODO: replace this with something more robust
+full_type(f, t1) <= full_type(f, t2) :- strlen(t1) < strlen(t2).
+
+.output full_type
