@@ -33,7 +33,7 @@ RamDomain list_contains(SymbolTable* symbolTable, RecordTable* recordTable, RamD
 
 RamDomain list_join_by_string(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain listId, RamDomain separator) {
     if (listId == 0) { // list1 is nil
-        return listId;
+        return symbolTable->encode("");
     }
     const RamDomain* list = recordTable->unpack(listId, 2);
     RamDomain hd = list[0];
