@@ -44,8 +44,13 @@ inferred_type(id, type) :-
 
 inferred_type(id, type) :-
     vertex(id, "Call", _, _),
-    edge(id, symbol_id, _, "callable"), vertex(symbol_id, "Symbol", _, function),
+    edge(id, symbol_id, _, "callee"), vertex(symbol_id, "Symbol", _, function),
     function_return_type(function, type).
+
+.output inferred_type()
+.output vertex
+.output edge
+.output function_return_type
 
 inferred_type(id, type) :-
     vertex(id, "Allocation", _, _),
