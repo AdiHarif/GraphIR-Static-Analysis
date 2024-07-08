@@ -22,6 +22,10 @@ comparison_operator("<=").
 comparison_operator(">").
 comparison_operator(">=").
 
+.decl boolean_operator(operator: symbol)
+boolean_operator("&&").
+boolean_operator("||").
+
 .decl inferred_type(id: number, type: symbol)
 inferred_type(id, "number") :-
     vertex(id, "Literal", _, value), IS_NUMERIC(value).
@@ -38,6 +42,9 @@ inferred_type(id, type) :-
 
 inferred_type(id, "boolean") :-
     vertex(id, "BinaryOperation", _, operator), comparison_operator(operator).
+
+inferred_type(id, "boolean") :-
+    vertex(id, "BinaryOperation", _, operator), boolean_operator(operator).
 
 inferred_type(id, "symbol") :- vertex(id, "Symbol", _, _).
 
