@@ -7,6 +7,10 @@
 
 .decl numeric_operator(operator: symbol)
 numeric_operator("+").
+numeric_operator("-").
+numeric_operator("*").
+numeric_operator("/").
+numeric_operator("%").
 numeric_operator(">>").
 numeric_operator(">>>").
 
