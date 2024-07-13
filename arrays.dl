@@ -14,6 +14,14 @@ array_element_type(array, type) :-
     edge(store, value, _, "value"),
     inferred_type(value, type).
 
+array_element_type(array, type) :-
+    vertex(array, "Allocation", _, _),
+    inferred_type(array, "Array"),
+    edge(array, _, _, "1"), // c'tor has more than one parameter
+    edge(array, element, _, index),
+    IS_NUMERIC(index),
+    inferred_type(element, type).
+
 inferred_type(load, type) :-
     vertex(load, "Load", _, _),
     edge(load, array_ref, _, "object"),
