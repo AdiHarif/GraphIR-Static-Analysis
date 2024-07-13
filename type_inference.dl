@@ -96,3 +96,6 @@ missing_type(id) :-
     !inferred_type(id, _).
 
 .output missing_type()
+
+#include "src/libs/math.dl"
+#include "src/libs/console.dl"

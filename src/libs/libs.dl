@@ -1,0 +1,20 @@
+
+#pragma once
+
+.decl lib_method(lib: symbol, method: symbol)
+
+inferred_type(v, "symbol") :-
+    vertex(v, "Load", _, _),
+    lib_method(lib, method),
+    edge(v, lib_id, _, "object"),
+    vertex(lib_id, "Symbol", _, lib),
+    edge(v, method_id, _, "property"),
+    vertex(method_id, "Symbol", _, method).
+
+inferred_type(id, type) :-
+    vertex(id, "Call", _, _),
+    edge(id, symbol_id, _, "callee"),
+    vertex(symbol_id, "Load", _, _),
+    edge(symbol_id, method_id, _, "property"),
+    vertex(method_id, _, _, method),
+    function_return_type(method, type).

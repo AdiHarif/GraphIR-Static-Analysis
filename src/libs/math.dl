@@ -1,0 +1,9 @@
+
+#pragma once
+
+#include "libs.dl"
+
+lib_method("Math", "floor").
+
+function_return_type("floor", "number").
+function_parameters_type("floor", to_string(0), "number").

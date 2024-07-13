@@ -1,0 +1,9 @@
+
+#pragma once
+
+#include "libs.dl"
+
+lib_method("console", "log").
+
+function_return_type("log", "undefined").
+function_parameters_type("log", to_string(0), "string").
