@@ -5,5 +5,5 @@
 
 lib_method("console", "log").
 
-function_return_type("log", "undefined").
-function_parameters_type("log", to_string(0), "string").
+function_return_type("console_log", "undefined").
+function_parameters_type("console_log", to_string(0), "string").
