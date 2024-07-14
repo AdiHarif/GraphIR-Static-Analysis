@@ -17,7 +17,9 @@ inferred_type(id, type) :-
     vertex(symbol_id, "Load", _, _),
     edge(symbol_id, method_id, _, "property"),
     vertex(method_id, _, _, method),
-    function_return_type(method, type).
+    lib_method(lib, method),
+    full_name = cat(lib, cat("_", method)),
+    function_return_type(full_name, type).
 
 
 .decl refers_to_function(v: number, f: symbol)
