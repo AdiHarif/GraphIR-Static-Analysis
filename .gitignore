@@ -1,5 +1,7 @@
 
 # Build files
-
-functors.o
+*.o
 libfunctors.so
+
+# Output files
+out
