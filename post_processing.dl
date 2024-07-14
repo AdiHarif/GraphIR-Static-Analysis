@@ -39,10 +39,22 @@ params_list(function_vertex, @list_append(params, type), n + 1) :-
     edge(function_vertex, param_vertex, _, to_string(n)),
     full_type(param_vertex, type).
 
+params_list(function_vertex, nil, 0) :-
+    refers_to_function(function_vertex, _).
+
+params_list(function_vertex, @list_append(params, full_type), n + 1) :-
+    params_list(function_vertex, params, n),
+    refers_to_function(function_vertex, function_name),
+    function_parameters_type(function_name, to_string(n), type),
+    primitive_type_conversion(type, full_type).
+
 params_list(f, _, n1) <= params_list(f, _, n2) :- n1 < n2.
 
 full_type(function_vertex, type) :-
-    vertex(function_vertex, _, _, function_name),
+    (
+        vertex(function_vertex, _, _, function_name) ;
+        refers_to_function(function_vertex, function_name)
+    ),
     params_list(function_vertex, p_list, _),
     params = cat("[", cat(@list_join_by_string(p_list, ","), "]")),
     function_return_type(function_name, return_type),

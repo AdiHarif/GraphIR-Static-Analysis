@@ -18,3 +18,15 @@ inferred_type(id, type) :-
     edge(symbol_id, method_id, _, "property"),
     vertex(method_id, _, _, method),
     function_return_type(method, type).
+
+
+.decl refers_to_function(v: number, f: symbol)
+
+refers_to_function(v, full_name) :-
+    vertex(v, "Load", _, _),
+    edge(v, function_id, _, "property"),
+    vertex(function_id, "Symbol", _, method_name),
+    edge(v, lib_id, _, "object"),
+    vertex(lib_id, "Symbol", _, lib_name),
+    lib_method(lib_name, method_name),
+    full_name = cat(lib_name, cat("_", method_name)).
