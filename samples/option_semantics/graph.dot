@@ -1,0 +1,560 @@
+digraph {
+  subgraph "cluster_0" {
+    style = "dotted";
+    "0" [
+      label = "0 | Start";
+      shape = "diamond";
+    ];
+    "1" [
+      label = "1 | #foo";
+      shape = "rectangle";
+    ];
+    "2" [
+      label = "2 | Call";
+      shape = "Mdiamond";
+    ];
+    "3" [
+      label = "3 | Return";
+      shape = "diamond";
+    ];
+    subgraph "cluster_1" {
+      style = "dotted";
+      "4" [
+        label = "4 | Start";
+        shape = "diamond";
+      ];
+      "5" [
+        label = "5 | #this";
+        shape = "rectangle";
+      ];
+      "6" [
+        label = "6 | #Array";
+        shape = "rectangle";
+      ];
+      "7" [
+        label = "7 | 10";
+        shape = "rectangle";
+      ];
+      "8" [
+        label = "8 | Allocation";
+        shape = "Mdiamond";
+      ];
+      "9" [
+        label = "9 | 0";
+        shape = "rectangle";
+      ];
+      "10" [
+        label = "10 | 1";
+        shape = "rectangle";
+      ];
+      "11" [
+        label = "11 | Store";
+        shape = "diamond";
+      ];
+      "12" [
+        label = "12 | 0";
+        shape = "rectangle";
+      ];
+      "13" [
+        label = "13 | Load";
+        shape = "Mdiamond";
+      ];
+      "14" [
+        label = "14 | Branch";
+        shape = "diamond";
+      ];
+      "15" [
+        label = "15 | #console";
+        shape = "rectangle";
+      ];
+      "16" [
+        label = "16 | #log";
+        shape = "rectangle";
+      ];
+      "17" [
+        label = "17 | Load";
+        shape = "Mdiamond";
+      ];
+      "18" [
+        label = "18 | \"Test failed (1)\"";
+        shape = "rectangle";
+      ];
+      "19" [
+        label = "19 | Call";
+        shape = "Mdiamond";
+      ];
+      "20" [
+        label = "20 | Return";
+        shape = "diamond";
+      ];
+      "21" [
+        label = "21 | BlockStart";
+        shape = "diamond";
+      ];
+      "22" [
+        label = "22 | BlockEnd";
+        shape = "diamond";
+      ];
+      "23" [
+        label = "23 | BlockStart";
+        shape = "diamond";
+      ];
+      "24" [
+        label = "24 | BlockEnd";
+        shape = "diamond";
+      ];
+      "25" [
+        label = "25 | Merge";
+        shape = "diamond";
+      ];
+      "26" [
+        label = "26 | 0";
+        shape = "rectangle";
+      ];
+      "27" [
+        label = "27 | 0";
+        shape = "rectangle";
+      ];
+      "28" [
+        label = "28 | Load";
+        shape = "Mdiamond";
+      ];
+      "29" [
+        label = "29 | ==";
+        shape = "rectangle";
+      ];
+      "30" [
+        label = "30 | Branch";
+        shape = "diamond";
+      ];
+      "31" [
+        label = "31 | #log";
+        shape = "rectangle";
+      ];
+      "32" [
+        label = "32 | Load";
+        shape = "Mdiamond";
+      ];
+      "33" [
+        label = "33 | \"Test failed (2)\"";
+        shape = "rectangle";
+      ];
+      "34" [
+        label = "34 | Call";
+        shape = "Mdiamond";
+      ];
+      "35" [
+        label = "35 | Return";
+        shape = "diamond";
+      ];
+      "36" [
+        label = "36 | BlockStart";
+        shape = "diamond";
+      ];
+      "37" [
+        label = "37 | BlockEnd";
+        shape = "diamond";
+      ];
+      "38" [
+        label = "38 | BlockStart";
+        shape = "diamond";
+      ];
+      "39" [
+        label = "39 | BlockEnd";
+        shape = "diamond";
+      ];
+      "40" [
+        label = "40 | Merge";
+        shape = "diamond";
+      ];
+      "41" [
+        label = "41 | 0";
+        shape = "rectangle";
+      ];
+      "42" [
+        label = "42 | 1";
+        shape = "rectangle";
+      ];
+      "43" [
+        label = "43 | Load";
+        shape = "Mdiamond";
+      ];
+      "44" [
+        label = "44 | !=";
+        shape = "rectangle";
+      ];
+      "45" [
+        label = "45 | Branch";
+        shape = "diamond";
+      ];
+      "46" [
+        label = "46 | #log";
+        shape = "rectangle";
+      ];
+      "47" [
+        label = "47 | Load";
+        shape = "Mdiamond";
+      ];
+      "48" [
+        label = "48 | \"Test failed (3)\"";
+        shape = "rectangle";
+      ];
+      "49" [
+        label = "49 | Call";
+        shape = "Mdiamond";
+      ];
+      "50" [
+        label = "50 | Return";
+        shape = "diamond";
+      ];
+      "51" [
+        label = "51 | BlockStart";
+        shape = "diamond";
+      ];
+      "52" [
+        label = "52 | BlockEnd";
+        shape = "diamond";
+      ];
+      "53" [
+        label = "53 | BlockStart";
+        shape = "diamond";
+      ];
+      "54" [
+        label = "54 | BlockEnd";
+        shape = "diamond";
+      ];
+      "55" [
+        label = "55 | Merge";
+        shape = "diamond";
+      ];
+      "56" [
+        label = "56 | #log";
+        shape = "rectangle";
+      ];
+      "57" [
+        label = "57 | Load";
+        shape = "Mdiamond";
+      ];
+      "58" [
+        label = "58 | \"Test passed\"";
+        shape = "rectangle";
+      ];
+      "59" [
+        label = "59 | Call";
+        shape = "Mdiamond";
+      ];
+      "60" [
+        label = "60 | Return";
+        shape = "diamond";
+      ];
+      "4" -> "8" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "8" -> "11" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "8" -> "6" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "8" -> "7" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "11" -> "13" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "11" -> "8" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "11" -> "10" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "11" -> "9" [
+        label = "value";
+        arrowhead = "onormal";
+      ];
+      "13" -> "14" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "13" -> "8" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "13" -> "12" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "14" -> "13" [
+        label = "condition";
+        arrowhead = "onormal";
+      ];
+      "14" -> "21" [
+        label = "true";
+        arrowhead = "normal";
+      ];
+      "14" -> "23" [
+        label = "false";
+        arrowhead = "normal";
+      ];
+      "17" -> "19" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "17" -> "15" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "17" -> "16" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "19" -> "20" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "19" -> "17" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "19" -> "18" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "21" -> "17" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "22" -> "25" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "23" -> "24" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "24" -> "25" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "25" -> "28" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "25" -> "14" [
+        label = "branch";
+        arrowhead = "vee";
+        style = "dashed";
+      ];
+      "28" -> "30" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "28" -> "8" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "28" -> "27" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "29" -> "28" [
+        label = "left";
+        arrowhead = "onormal";
+      ];
+      "29" -> "26" [
+        label = "right";
+        arrowhead = "onormal";
+      ];
+      "30" -> "29" [
+        label = "condition";
+        arrowhead = "onormal";
+      ];
+      "30" -> "36" [
+        label = "true";
+        arrowhead = "normal";
+      ];
+      "30" -> "38" [
+        label = "false";
+        arrowhead = "normal";
+      ];
+      "32" -> "34" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "32" -> "15" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "32" -> "31" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "34" -> "35" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "34" -> "32" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "34" -> "33" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "36" -> "32" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "37" -> "40" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "38" -> "39" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "39" -> "40" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "40" -> "43" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "40" -> "30" [
+        label = "branch";
+        arrowhead = "vee";
+        style = "dashed";
+      ];
+      "43" -> "45" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "43" -> "8" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "43" -> "42" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "44" -> "43" [
+        label = "left";
+        arrowhead = "onormal";
+      ];
+      "44" -> "41" [
+        label = "right";
+        arrowhead = "onormal";
+      ];
+      "45" -> "44" [
+        label = "condition";
+        arrowhead = "onormal";
+      ];
+      "45" -> "51" [
+        label = "true";
+        arrowhead = "normal";
+      ];
+      "45" -> "53" [
+        label = "false";
+        arrowhead = "normal";
+      ];
+      "47" -> "49" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "47" -> "15" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "47" -> "46" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "49" -> "50" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "49" -> "47" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "49" -> "48" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+      "51" -> "47" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "52" -> "55" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "53" -> "54" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "54" -> "55" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "55" -> "57" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "55" -> "45" [
+        label = "branch";
+        arrowhead = "vee";
+        style = "dashed";
+      ];
+      "57" -> "59" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "57" -> "15" [
+        label = "object";
+        arrowhead = "onormal";
+      ];
+      "57" -> "56" [
+        label = "property";
+        arrowhead = "onormal";
+      ];
+      "59" -> "60" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "59" -> "57" [
+        label = "callee";
+        arrowhead = "onormal";
+      ];
+      "59" -> "58" [
+        label = "0";
+        arrowhead = "onormal";
+      ];
+    }
+    "0" -> "2" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "1" -> "4" [
+      label = "start";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "2" -> "3" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "2" -> "1" [
+      label = "callee";
+      arrowhead = "onormal";
+    ];
+  }
+}
