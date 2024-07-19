@@ -2,7 +2,7 @@
 #include "type_inference.dl"
 #include "arrays.dl"
 #include "points_to.dl"
-#include "src/symbol_list.dl"
+#include "symbol_list.dl"
 
 .decl full_type(vertex: number, type: symbol)
 

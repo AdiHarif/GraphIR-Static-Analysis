@@ -1,5 +1,5 @@
 
-#include "./graph_definitions.dl"
+#include "graph_definitions.dl"
 
 .decl tainting_vertex(id: number)
 .input tainting_vertex(filename="in.csv", delimiter=",")

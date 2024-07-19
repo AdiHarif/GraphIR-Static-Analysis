@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "./graph_definitions.dl"
+#include "graph_definitions.dl"
 
 .decl may_refer_to(from: number, to: number)
 

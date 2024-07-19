@@ -1,7 +1,7 @@
 
-#include "./graph_definitions.dl"
-#include "./type_inference.dl"
-#include "./points_to.dl"
+#include "graph_definitions.dl"
+#include "type_inference.dl"
+#include "points_to.dl"
 
 .decl array_element_type(array: number, type: symbol)
 

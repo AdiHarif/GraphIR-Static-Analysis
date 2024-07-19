@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "./graph_definitions.dl"
-#include "./points_to.dl"
-#include "./utilities.dl"
+#include "graph_definitions.dl"
+#include "points_to.dl"
+#include "utilities.dl"
 
 .decl numeric_operator(operator: symbol)
 numeric_operator("+").
@@ -97,5 +97,5 @@ missing_type(id) :-
 
 .output missing_type()
 
-#include "src/libs/math.dl"
-#include "src/libs/console.dl"
+#include "libs/math.dl"
+#include "libs/console.dl"
