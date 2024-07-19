@@ -25,6 +25,14 @@ array_element_type(array, type) :-
     IS_NUMERIC(index),
     inferred_type(element, type).
 
+array_element_type(array, $Undefined()) :-
+    vertex(array, "Allocation", _, _),
+    inferred_type(array, $Array($Bottom())),
+    !edge(array, _, _, "1"), // c'tor has only one parameter
+    edge(array, element, _, "0"),
+    vertex(element, "Literal", _, value),
+    IS_NUMERIC(value).
+
 inferred_type(load, type) :-
     vertex(load, "Load", _, _),
     edge(load, array_ref, _, "object"),
