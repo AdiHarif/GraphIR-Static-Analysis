@@ -65,4 +65,3 @@ full_type(function_vertex, type) :-
 // TODO: replace this with something more robust
 full_type(f, t1) <= full_type(f, t2) :- strlen(t1) < strlen(t2).
 
-.output full_type

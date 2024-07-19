@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "graph_definitions.dl"
 #include "type_inference.dl"
 #include "points_to.dl"
@@ -27,5 +29,3 @@ inferred_type(load, type) :-
     edge(load, array_ref, _, "object"),
     may_refer_to(array_ref, array),
     array_element_type(array, type).
-
-.output array_element_type()

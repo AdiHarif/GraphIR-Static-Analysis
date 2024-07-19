@@ -1,0 +1,15 @@
+
+#include "arrays.dl"
+#include "points_to.dl"
+#include "type_inference.dl"
+
+#ifndef NDEBUG
+
+.output array_element_type
+.output may_refer_to
+.output points_to
+.output inferred_type
+.output function_return_type
+.output missing_type
+
+#endif

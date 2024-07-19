@@ -58,11 +58,6 @@ inferred_type(id, type) :-
     edge(id, symbol_id, _, "callee"), vertex(symbol_id, "Symbol", _, function),
     function_return_type(function, type).
 
-.output inferred_type()
-.output vertex
-.output edge
-.output function_return_type
-
 inferred_type(id, type) :-
     vertex(id, "Allocation", _, _),
     edge(id, callee, _, "callee"),
@@ -87,15 +82,11 @@ function_parameters_type(function, index, type) :-
     inferred_type(parameter, type),
     edge(call, callee, _, "callee"), vertex(callee, "Symbol", _, function).
 
-.output inferred_type()
-
 .decl missing_type(id: number)
 missing_type(id) :-
     vertex(id, _, category, _),
     category != "Control",
     !inferred_type(id, _).
-
-.output missing_type()
 
 #include "libs/math.dl"
 #include "libs/console.dl"

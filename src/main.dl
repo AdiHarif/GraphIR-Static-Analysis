@@ -1,0 +1,8 @@
+
+#include "post_processing.dl"
+
+#ifndef NDEBUG
+#include "debug_output.dl"
+#endif
+
+.output full_type
