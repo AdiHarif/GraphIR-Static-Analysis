@@ -3,27 +3,28 @@
 #include "arrays.dl"
 #include "points_to.dl"
 #include "symbol_list.dl"
+#include "ir_type.dl"
 
 .decl full_type(vertex: number, type: symbol)
 
-.decl primitive_type_conversion(source_type: symbol, target_type: symbol)
-primitive_type_conversion("number", "Float64").
-primitive_type_conversion("boolean", "Integer1").
-primitive_type_conversion("string", "StaticString").
-primitive_type_conversion("undefined", "Void").
+.decl primitive_type_conversion(source_type: irType, target_type: symbol)
+primitive_type_conversion($Number(), "Float64").
+primitive_type_conversion($Boolean(), "Integer1").
+primitive_type_conversion($String(), "StaticString").
+primitive_type_conversion($Undefined(), "Void").
 
 full_type(v, target) :-
     inferred_type(v, source),
     primitive_type_conversion(source, target).
 
 full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
-    inferred_type(v, "Array"),
+    inferred_type(v, $Array($Bottom())),
     may_refer_to(v, alloc),
     array_element_type(alloc, source_type),
     primitive_type_conversion(source_type, element_type).
 
 full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
-    inferred_type(v, "Array"),
+    inferred_type(v, $Array($Bottom())),
     may_refer_to(v, alloc),
     points_to(alloc, element, _),
     full_type(element, element_type).

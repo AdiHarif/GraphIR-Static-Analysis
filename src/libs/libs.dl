@@ -3,7 +3,7 @@
 
 .decl lib_method(lib: symbol, method: symbol)
 
-inferred_type(v, "symbol") :-
+inferred_type(v, $Symbol()) :-
     vertex(v, "Load", _, _),
     lib_method(lib, method),
     edge(v, lib_id, _, "object"),

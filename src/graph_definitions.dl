@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "ir_type.dl"
+
 .decl edge(src: number, dst: number, category: symbol, label: symbol)
 .input edge(filename="edges.csv", delimiter=",")
 
@@ -28,8 +30,8 @@ control_vertex(v) :- vertex(v, _, "Compound", _).
 reaching(a, a) :- control_vertex(a).
 reaching(a, b) :- reaching(a, mid), edge(mid, b, "Control", _).
 
-.decl function_return_type(function: symbol, type: symbol)
-.decl function_parameters_type(function: symbol, parameter: symbol, type: symbol)
+.decl function_return_type(function: symbol, type: irType)
+.decl function_parameters_type(function: symbol, parameter: symbol, type: irType)
 
 .decl function_return(function: symbol, vertex: number)
 // .input function_return(filename="function_return.csv", delimiter=",")

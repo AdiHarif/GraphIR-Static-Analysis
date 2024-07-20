@@ -4,6 +4,7 @@
 #include "graph_definitions.dl"
 #include "points_to.dl"
 #include "utilities.dl"
+#include "ir_type.dl"
 
 .decl numeric_operator(operator: symbol)
 numeric_operator("+").
@@ -26,27 +27,27 @@ comparison_operator(">=").
 boolean_operator("&&").
 boolean_operator("||").
 
-.decl inferred_type(id: number, type: symbol)
-inferred_type(id, "number") :-
+.decl inferred_type(id: number, type: irType)
+inferred_type(id, $Number()) :-
     vertex(id, "Literal", _, value), IS_NUMERIC(value).
-inferred_type(id, "string") :-
+inferred_type(id, $String()) :-
     vertex(id, "Literal", _, value), IS_STRING(value).
-inferred_type(id, "boolean") :-
+inferred_type(id, $Boolean()) :-
     vertex(id, "Literal", _, value), IS_BOOLEAN(value).
 
-inferred_type(id, "number") :-
+inferred_type(id, $Number()) :-
     vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator).
 inferred_type(id, type) :-
     vertex(id, "Phi", _, _), inferred_type(arg, type),
     (phi_args(id, arg, _) ; phi_args(id, _, arg)).
 
-inferred_type(id, "boolean") :-
+inferred_type(id, $Boolean()) :-
     vertex(id, "BinaryOperation", _, operator), comparison_operator(operator).
 
-inferred_type(id, "boolean") :-
+inferred_type(id, $Boolean()) :-
     vertex(id, "BinaryOperation", _, operator), boolean_operator(operator).
 
-inferred_type(id, "symbol") :- vertex(id, "Symbol", _, _).
+inferred_type(id, $Symbol()) :- vertex(id, "Symbol", _, _).
 
 inferred_type(id, type) :-
     vertex(id, "Parameter", _, _),
@@ -58,15 +59,15 @@ inferred_type(id, type) :-
     edge(id, symbol_id, _, "callee"), vertex(symbol_id, "Symbol", _, function),
     function_return_type(function, type).
 
-inferred_type(id, type) :-
+inferred_type(id, $Array($Bottom())) :-
     vertex(id, "Allocation", _, _),
     edge(id, callee, _, "callee"),
-    vertex(callee, "Symbol", _, type).
+    vertex(callee, "Symbol", _, "Array").
 
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
 
-function_return_type(function, "undefined") :-
+function_return_type(function, $Undefined()) :-
     vertex(id, "Return", _, _),
     function_return(function, id),
     !edge(id, _, _, "value").

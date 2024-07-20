@@ -1,0 +1,11 @@
+
+#pragma once
+
+.type irType =
+      Bottom {}
+    | Undefined {}
+    | Number {}
+    | Boolean {}
+    | String {}
+    | Symbol {}
+    | Array { element_type: irType }

@@ -4,12 +4,13 @@
 #include "graph_definitions.dl"
 #include "type_inference.dl"
 #include "points_to.dl"
+#include "ir_type.dl"
 
-.decl array_element_type(array: number, type: symbol)
+.decl array_element_type(array: number, type: irType)
 
 array_element_type(array, type) :-
     vertex(array, "Allocation", _, _),
-    inferred_type(array, "Array"),
+    inferred_type(array, $Array(_)),
     vertex(store, "Store", _, _),
     edge(store, array_ref, _, "object"),
     may_refer_to(array_ref, array),
@@ -18,7 +19,7 @@ array_element_type(array, type) :-
 
 array_element_type(array, type) :-
     vertex(array, "Allocation", _, _),
-    inferred_type(array, "Array"),
+    inferred_type(array, $Array(_)),
     edge(array, _, _, "1"), // c'tor has more than one parameter
     edge(array, element, _, index),
     IS_NUMERIC(index),
