@@ -8,7 +8,7 @@
 .decl full_type(vertex: number, type: symbol)
 
 full_type(v, @irTypeToString(source)) :-
-    inferred_type(v, source).
+    inferred_type(v, source), source != $Symbol().
 
 full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
     inferred_type(v, $Array($Bottom())),
