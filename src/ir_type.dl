@@ -14,9 +14,9 @@
     | String {}
     | Symbol {}
     | Tuple { element_types: irTypeList }
-    | Void {}
     | Undefined {}
     | Union { types: irTypeSet }
+    | Void {}
 
 .functor irTypeToString(t: irType): symbol stateful
 

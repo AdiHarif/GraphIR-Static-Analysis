@@ -33,9 +33,9 @@ enum irType {
     String,
     Symbol,
     Tuple,
-    Void,
     Undefined,
-    Union
+    Union,
+    Void
 };
 
 const RamDomain nil = 0;
@@ -312,9 +312,9 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "StaticString",
         "Symbol",
         "Tuple",
-        "Void",
         "Undefined",
-        "Union"
+        "Union",
+        "Void"
     };
 
     if (t[0] == Union || t[0] == Tuple) {
