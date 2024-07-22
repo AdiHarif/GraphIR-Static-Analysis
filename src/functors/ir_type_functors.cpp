@@ -28,7 +28,7 @@ enum irType {
     Array,
     Boolean,
     Bottom,
-    Function,
+    // Function,
     Number,
     String,
     Symbol,
@@ -163,12 +163,12 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
             return type_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Union:
             return list_compare(symbolTable, recordTable, type1[1], type2[1]);
-        case Function:
-            cmp = list_compare(symbolTable, recordTable, type1[1], type2[1]);
-            if (cmp == 0) {
-                cmp = type_compare(symbolTable, recordTable, type1[2], type2[2]);
-            }
-            return cmp;
+        // case Function:
+        //     cmp = list_compare(symbolTable, recordTable, type1[1], type2[1]);
+        //     if (cmp == 0) {
+        //         cmp = type_compare(symbolTable, recordTable, type1[2], type2[2]);
+        //     }
+        //     return cmp;
         default:
             throw std::runtime_error("Unexpected irType constructor");
     }
@@ -311,7 +311,7 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "DynamicArray",
         "Integer1",
         "Bottom",
-        "Function",
+        // "Function",
         "Float64",
         "StaticString",
         "Symbol",
@@ -342,11 +342,11 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         return symbolTable->encode("DynamicArray<" + symbolTable->decode(elementString) + ">");
     }
 
-    if (t[0] == Function) {
-        const RamDomain argString = symbolTable->encode(joinTypeList(symbolTable, recordTable, t[1]));
-        const RamDomain retString = irTypeToString(symbolTable, recordTable, t[2]);
-        return symbolTable->encode("[" + symbolTable->decode(argString) + "]" + " -> " + symbolTable->decode(retString));
-    }
+    // if (t[0] == Function) {
+    //     const RamDomain argString = symbolTable->encode(joinTypeList(symbolTable, recordTable, t[1]));
+    //     const RamDomain retString = irTypeToString(symbolTable, recordTable, t[2]);
+    //     return symbolTable->encode("[" + symbolTable->decode(argString) + "]" + " -> " + symbolTable->decode(retString));
+    // }
 
     return symbolTable->encode(typeNames[t[0]]);
 }

@@ -9,7 +9,7 @@
     | Array { element_type: irType }
     | Boolean {}
     | Bottom {}
-    | Function { parameters: irTypeList, return_type: irType }
+    // | Function { parameters: irTypeList, return_type: irType }
     | Number {}
     | String {}
     | Symbol {}
