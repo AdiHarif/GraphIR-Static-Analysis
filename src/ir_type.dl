@@ -2,15 +2,19 @@
 #pragma once
 
 .type irTypeSet = [ hd: irType, tl: irTypeSet ]
+.type irTypeList = [ hd: irType, tl: irTypeList ]
 
 .type irType =
       Any {}
     | Array { element_type: irType }
     | Boolean {}
     | Bottom {}
+    | Function { parameters: irTypeList, return_type: irType }
     | Number {}
     | String {}
     | Symbol {}
+    | Tuple { element_types: irTypeList }
+    | Void {}
     | Undefined {}
     | Union { types: irTypeSet }
 

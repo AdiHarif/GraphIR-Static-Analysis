@@ -3,7 +3,11 @@
 
 #include <souffle/SouffleInterface.h>
 
-using namespace souffle;
+using souffle::RamDomain;
+using souffle::SymbolTable;
+using souffle::RecordTable;
+
+using std::string;
 
 extern "C" {
 
@@ -24,9 +28,12 @@ enum irType {
     Array,
     Boolean,
     Bottom,
+    Function,
     Number,
     String,
     Symbol,
+    Tuple,
+    Void,
     Undefined,
     Union
 };
@@ -103,7 +110,7 @@ RamDomain set_create(SymbolTable* symbolTable, RecordTable* recordTable, const R
     return recordTable->pack(newSet, 2);
 }
 
-int set_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
+int list_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
     if (arg1 == arg2) {
         return 0;
     }
@@ -122,7 +129,7 @@ int set_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain ar
     }
 
     else {
-        return set_compare(symbolTable, recordTable, type1[1], type2[1]);
+        return list_compare(symbolTable, recordTable, type1[1], type2[1]);
     }
 }
 
@@ -138,6 +145,8 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
         return type1[0] - type2[0];
     }
 
+    int cmp;
+
     switch (type1[0]) {
         case Bottom:
         case Undefined:
@@ -145,12 +154,21 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
         case Boolean:
         case String:
         case Symbol:
+        case Void:
         case Any:
             return 0;
+        case Tuple:
+            return list_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Array:
             return type_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Union:
-            return set_compare(symbolTable, recordTable, type1[1], type2[1]);
+            return list_compare(symbolTable, recordTable, type1[1], type2[1]);
+        case Function:
+            cmp = list_compare(symbolTable, recordTable, type1[1], type2[1]);
+            if (cmp == 0) {
+                cmp = type_compare(symbolTable, recordTable, type1[2], type2[2]);
+            }
+            return cmp;
         default:
             throw std::runtime_error("Unexpected irType constructor");
     }
@@ -257,23 +275,41 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     return recordTable->pack(newType, 1);
 }
 
+RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+
+string joinTypeList(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain list, string sep=",") {
+    if (list == nil) {
+        return "";
+    }
+
+    const RamDomain* type = recordTable->unpack(list, maxArity);
+    string result = symbolTable->decode(irTypeToString(symbolTable, recordTable, type[0]));
+    if (type[1] != nil) {
+        result += ", " + joinTypeList(symbolTable, recordTable, type[1]);
+    }
+    return result;
+}
+
 RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
     const RamDomain* t = recordTable->unpack(type, maxArity);
-    static const std::string typeNames[] = {
+    static const string typeNames[] = {
         "Any",
         "DynamicArray",
         "Integer1",
         "Bottom",
+        "Function",
         "Float64",
         "StaticString",
         "Symbol",
+        "Tuple",
+        "Void",
         "Undefined",
         "Union"
     };
 
-    if (t[0] == Union) {
+    if (t[0] == Union || t[0] == Tuple) {
         RamDomain tail = t[1];
-        std::string result = "Union<";
+        string result = t[0] == Union ? "Union<" : "[";
         while (tail != nil) {
             const RamDomain* type = recordTable->unpack(tail, maxArity);
             const RamDomain typeName = irTypeToString(symbolTable, recordTable, type[0]);
@@ -283,13 +319,19 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
                 result += ",";
             }
         }
-        result += ">";
+        result += t[0] == Union ? ">" : "]";
         return symbolTable->encode(result);
     }
 
     if (t[0] == Array) {
         const RamDomain elementString = irTypeToString(symbolTable, recordTable, t[1]);
         return symbolTable->encode("DynamicArray<" + symbolTable->decode(elementString) + ">");
+    }
+
+    if (t[0] == Function) {
+        const RamDomain argString = symbolTable->encode(joinTypeList(symbolTable, recordTable, t[1]));
+        const RamDomain retString = irTypeToString(symbolTable, recordTable, t[2]);
+        return symbolTable->encode("[" + symbolTable->decode(argString) + "]" + " -> " + symbolTable->decode(retString));
     }
 
     return symbolTable->encode(typeNames[t[0]]);
