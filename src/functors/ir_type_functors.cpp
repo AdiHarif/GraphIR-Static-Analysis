@@ -262,7 +262,7 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     if (type1[0] == Union) {
-        if (set_contains(symbolTable, recordTable, type1[1], type2[1])) {
+        if (set_contains(symbolTable, recordTable, type1[1], arg2)) {
             return arg2;
         }
         else {
@@ -272,7 +272,7 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     if (type2[0] == Union) {
-        if (set_contains(symbolTable, recordTable, type2[1], type1[1])) {
+        if (set_contains(symbolTable, recordTable, type2[1], arg1)) {
             return arg1;
         }
         else {
