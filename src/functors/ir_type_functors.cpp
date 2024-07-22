@@ -198,6 +198,11 @@ RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
         return type2;
     }
 
+    if (t1[0] == Array && t2[0] == Array) {
+        RamDomain newType[2] = {Array, irTypeLub(symbolTable, recordTable, t1[1], t2[1])};
+        return recordTable->pack(newType, 2);
+    }
+
     if (t1[0] == Union && t2[0] == Union) {
         RamDomain newType[2] = {Union, set_union(symbolTable, recordTable, t1[1], t2[1])};
         return recordTable->pack(newType, 2);
@@ -240,6 +245,11 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     RamDomain newType[2];
+
+    if (type1[0] == Array && type2[0] == Array) {
+        RamDomain newType[2] = {Array, irTypeGlb(symbolTable, recordTable, type1[1], type2[1])};
+        return recordTable->pack(newType, 2);
+    }
 
     if (type1[0] == Union && type2[0] == Union) {
         newType[0] = Union;
