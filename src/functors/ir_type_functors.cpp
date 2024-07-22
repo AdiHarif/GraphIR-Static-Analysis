@@ -234,9 +234,13 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     const RamDomain* type1 = recordTable->unpack(arg1, maxArity);
     const RamDomain* type2 = recordTable->unpack(arg2, maxArity);
 
-    if (type1[0] == Bottom || type2[0] == Bottom) {
+    if (type1[0] == Bottom) {
         return arg1;
     }
+    if (type2[0] == Bottom) {
+        return arg2;
+    }
+
     if (type1[0] == Any) {
         return arg2;
     }
