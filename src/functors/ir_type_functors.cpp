@@ -257,4 +257,42 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     return recordTable->pack(newType, 1);
 }
 
+RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
+    const RamDomain* t = recordTable->unpack(type, maxArity);
+    static const std::string typeNames[] = {
+        "Any",
+        "DynamicArray",
+        "Integer1",
+        "Bottom",
+        "Float64",
+        "StaticString",
+        "Symbol",
+        "Undefined",
+        "Union"
+    };
+
+    if (t[0] == Union) {
+        RamDomain tail = t[1];
+        std::string result = "Union<";
+        while (tail != nil) {
+            const RamDomain* type = recordTable->unpack(tail, maxArity);
+            const RamDomain typeName = irTypeToString(symbolTable, recordTable, type[0]);
+            result += symbolTable->decode(typeName);
+            tail = type[1];
+            if (tail != nil) {
+                result += ",";
+            }
+        }
+        result += ">";
+        return symbolTable->encode(result);
+    }
+
+    if (t[0] == Array) {
+        const RamDomain elementString = irTypeToString(symbolTable, recordTable, t[1]);
+        return symbolTable->encode("DynamicArray<" + symbolTable->decode(elementString) + ">");
+    }
+
+    return symbolTable->encode(typeNames[t[0]]);
+}
+
 }

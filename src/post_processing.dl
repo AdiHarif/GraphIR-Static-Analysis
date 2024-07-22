@@ -7,21 +7,14 @@
 
 .decl full_type(vertex: number, type: symbol)
 
-.decl primitive_type_conversion(source_type: irType, target_type: symbol)
-primitive_type_conversion($Number(), "Float64").
-primitive_type_conversion($Boolean(), "Integer1").
-primitive_type_conversion($String(), "StaticString").
-primitive_type_conversion($Undefined(), "Void").
-
-full_type(v, target) :-
-    inferred_type(v, source),
-    primitive_type_conversion(source, target).
+full_type(v, @irTypeToString(source)) :-
+    inferred_type(v, source).
 
 full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
     inferred_type(v, $Array($Bottom())),
     may_refer_to(v, alloc),
     array_element_type(alloc, source_type),
-    primitive_type_conversion(source_type, element_type).
+    element_type = @irTypeToString(source_type).
 
 full_type(v, cat("DynamicArray<", cat(element_type,">"))) :-
     inferred_type(v, $Array($Bottom())),
@@ -48,7 +41,7 @@ params_list(function_vertex, @list_append(params, full_type), n + 1) :-
     params_list(function_vertex, params, n),
     refers_to_function(function_vertex, function_name),
     function_parameters_type(function_name, to_string(n), type),
-    primitive_type_conversion(type, full_type).
+    full_type = @irTypeToString(type).
 
 params_list(f, _, n1) <= params_list(f, _, n2) :- n1 < n2.
 
@@ -60,7 +53,7 @@ full_type(function_vertex, type) :-
     params_list(function_vertex, p_list, _),
     params = cat("[", cat(@list_join_by_string(p_list, ","), "]")),
     function_return_type(function_name, return_type),
-    primitive_type_conversion(return_type, full_return_type),
+    full_return_type = @irTypeToString(return_type),
     type = cat(params, cat("->", full_return_type)).
 
 // TODO: replace this with something more robust

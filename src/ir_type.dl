@@ -14,6 +14,8 @@
     | Undefined {}
     | Union { types: irTypeSet }
 
+.functor irTypeToString(t: irType): symbol stateful
+
 .functor irTypeLub(t1: irType, t2: irType): irType stateful
 .functor irTypeGlb(t1: irType, t2: irType): irType stateful
 
