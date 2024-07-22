@@ -67,7 +67,7 @@ inferred_type(id, $Array($Bottom())) :-
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
 
-function_return_type(function, $Undefined()) :-
+function_return_type(function, $Void()) :-
     vertex(id, "Return", _, _),
     function_return(function, id),
     !edge(id, _, _, "value").
