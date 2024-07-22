@@ -1,11 +1,25 @@
 
 #pragma once
 
+.type irTypeSet = [ hd: irType, tl: irTypeSet ]
+
 .type irType =
-      Bottom {}
-    | Undefined {}
-    | Number {}
+      Any {}
+    | Array { element_type: irType }
     | Boolean {}
+    | Bottom {}
+    | Number {}
     | String {}
     | Symbol {}
-    | Array { element_type: irType }
+    | Undefined {}
+    | Union { types: irTypeSet }
+
+.functor irTypeLub(t1: irType, t2: irType): irType stateful
+.functor irTypeGlb(t1: irType, t2: irType): irType stateful
+
+.lattice irType<> {
+    Bottom -> $Bottom(),
+    Lub -> @irTypeLub(_,_),
+    Glb -> @irTypeGlb(_,_),
+    Top -> $Any()
+}

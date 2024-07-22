@@ -6,4 +6,4 @@ run:
 
 functors:
 	g++ -c -fPIC src/functors/*.cpp
-	g++ -shared -o libfunctors.so functors.o set_functors.o list_functors.o
+	g++ -shared -o libfunctors.so functors.o set_functors.o list_functors.o ir_type_functors.o

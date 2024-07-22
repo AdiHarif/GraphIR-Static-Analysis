@@ -27,7 +27,7 @@ comparison_operator(">=").
 boolean_operator("&&").
 boolean_operator("||").
 
-.decl inferred_type(id: number, type: irType)
+.decl inferred_type(id: number, type: irType<>)
 inferred_type(id, $Number()) :-
     vertex(id, "Literal", _, value), IS_NUMERIC(value).
 inferred_type(id, $String()) :-
