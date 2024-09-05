@@ -267,7 +267,7 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
         }
         else {
             newType[0] = Bottom;
-            return recordTable->pack(newType, 1);
+            return recordTable->pack(newType, 2);
         }
     }
 
@@ -277,7 +277,7 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
         }
         else {
             newType[0] = Bottom;
-            return recordTable->pack(newType, 1);
+            return recordTable->pack(newType, 2);
         }
     }
 
@@ -286,7 +286,7 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     newType[0] = Bottom;
-    return recordTable->pack(newType, 1);
+    return recordTable->pack(newType, 2);
 }
 
 RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
