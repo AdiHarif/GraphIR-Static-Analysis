@@ -38,3 +38,10 @@ inferred_type(load, type) :-
     edge(load, array_ref, _, "object"),
     may_refer_to(array_ref, array),
     array_element_type(array, type).
+
+inferred_type(array, $Array(element_type)) :-
+    vertex(store, "Store", _, _),
+    edge(store, array_ref, _, "object"),
+    may_refer_to(array_ref, array),
+    edge(store, value, _, "value"),
+    inferred_type(value, element_type).
