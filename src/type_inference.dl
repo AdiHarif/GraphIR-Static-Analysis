@@ -59,10 +59,6 @@ inferred_type(id, type) :-
     edge(id, symbol_id, _, "callee"), vertex(symbol_id, "Symbol", _, function),
     function_return_type(function, type).
 
-inferred_type(id, $Array($Bottom())) :-
-    vertex(id, "Allocation", _, _),
-    edge(id, callee, _, "callee"),
-    vertex(callee, "Symbol", _, "Array").
 
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).

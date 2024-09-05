@@ -6,11 +6,18 @@
 #include "points_to.dl"
 #include "ir_type.dl"
 
+.decl array_allocation(id: number)
+
+array_allocation(id) :-
+    vertex(id, "Allocation", _, _),
+    edge(id, callee, _, "callee"),
+    vertex(callee, "Symbol", _, "Array").
+
+
 .decl array_element_type(array: number, type: irType<>)
 
 array_element_type(array, type) :-
-    vertex(array, "Allocation", _, _),
-    inferred_type(array, $Array($Bottom())),
+    array_allocation(array),
     vertex(store, "Store", _, _),
     edge(store, array_ref, _, "object"),
     may_refer_to(array_ref, array),
@@ -18,20 +25,21 @@ array_element_type(array, type) :-
     inferred_type(value, type).
 
 array_element_type(array, type) :-
-    vertex(array, "Allocation", _, _),
-    inferred_type(array, $Array($Bottom())),
+    array_allocation(array),
     edge(array, _, _, "1"), // c'tor has more than one parameter
     edge(array, element, _, index),
     IS_NUMERIC(index),
     inferred_type(element, type).
 
 array_element_type(array, $Undefined()) :-
-    vertex(array, "Allocation", _, _),
-    inferred_type(array, $Array($Bottom())),
+    array_allocation(array),
     !edge(array, _, _, "1"), // c'tor has only one parameter
     edge(array, element, _, "0"),
     vertex(element, "Literal", _, value),
     IS_NUMERIC(value).
+
+inferred_type(array, $Array(element_type)) :-
+    array_element_type(array, element_type).
 
 inferred_type(load, type) :-
     vertex(load, "Load", _, _),
