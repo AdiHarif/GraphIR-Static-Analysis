@@ -10,6 +10,10 @@ using souffle::RecordTable;
 using std::string;
 
 extern "C" {
+    RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
+    RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
+    RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+}
 
 // enum irType {
 //     Bottom = 0,
@@ -43,8 +47,9 @@ const RamDomain nil = 0;
 const size_t maxArity = 2;
 
 int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
+int tag_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
 
-RamDomain set_union(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId1, RamDomain setId2) {
+RamDomain type_set_union(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId1, RamDomain setId2) {
     if (setId1 == nil) {
         return setId2;
     }
@@ -57,22 +62,30 @@ RamDomain set_union(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
 
     int cmp = type_compare(symbolTable, recordTable, set1[0], set2[0]);
     if (cmp == 0) {
-        RamDomain newSet[2] = {set1[0], set_union(symbolTable, recordTable, set1[1], set2[1])};
+        RamDomain newSet[2] = {set1[0], type_set_union(symbolTable, recordTable, set1[1], set2[1])};
+        return recordTable->pack(newSet, 2);
+    }
+
+    if (tag_compare(symbolTable, recordTable, set1[0], set2[0]) == 0) {
+        RamDomain newSet[2] = {
+            irTypeLub(symbolTable, recordTable, set1[0], set2[0]),
+            type_set_union(symbolTable, recordTable, set1[1], set2[1])
+        };
         return recordTable->pack(newSet, 2);
     }
 
     if (cmp < 0) {
-        RamDomain newSet[2] = {set1[0], set_union(symbolTable, recordTable, set1[1], setId2)};
+        RamDomain newSet[2] = {set1[0], type_set_union(symbolTable, recordTable, set1[1], setId2)};
         return recordTable->pack(newSet, 2);
     }
 
     if (cmp > 0) {
-        RamDomain newSet[2] = {set2[0], set_union(symbolTable, recordTable, setId1, set2[1])};
+        RamDomain newSet[2] = {set2[0], type_set_union(symbolTable, recordTable, setId1, set2[1])};
         return recordTable->pack(newSet, 2);
     }
 }
 
-RamDomain set_intersect(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId1, RamDomain setId2) {
+RamDomain type_set_intersect(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId1, RamDomain setId2) {
     if (setId1 == nil || setId2 == nil) {
         return nil;
     }
@@ -82,26 +95,26 @@ RamDomain set_intersect(SymbolTable* symbolTable, RecordTable* recordTable, RamD
 
     int cmp = type_compare(symbolTable, recordTable, set1[0], set2[0]);
     if (cmp == 0) {
-        RamDomain newSet[2] = {set1[0], set_intersect(symbolTable, recordTable, set1[1], set2[1])};
+        RamDomain newSet[2] = {set1[0], type_set_intersect(symbolTable, recordTable, set1[1], set2[1])};
         return recordTable->pack(newSet, 2);
     }
 
     if (cmp < 0) {
-        return set_intersect(symbolTable, recordTable, set1[1], setId2);
+        return type_set_intersect(symbolTable, recordTable, set1[1], setId2);
     }
 
     if (cmp > 0) {
-        return set_intersect(symbolTable, recordTable, setId1, set2[1]);
+        return type_set_intersect(symbolTable, recordTable, setId1, set2[1]);
     }
 }
 
-RamDomain set_create(SymbolTable* symbolTable, RecordTable* recordTable, const RamDomain type1, const RamDomain type2) {
+RamDomain type_set_create(SymbolTable* symbolTable, RecordTable* recordTable, const RamDomain type1, const RamDomain type2) {
     int cmp = type_compare(symbolTable, recordTable, type1, type2);
     if (cmp == 0) {
         return type1;
     }
     if (cmp > 0) {
-        return set_create(symbolTable, recordTable, type2, type1);
+        return type_set_create(symbolTable, recordTable, type2, type1);
     }
 
     RamDomain tail[2] = {type2, nil};
@@ -110,7 +123,7 @@ RamDomain set_create(SymbolTable* symbolTable, RecordTable* recordTable, const R
     return recordTable->pack(newSet, 2);
 }
 
-int list_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
+int type_list_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
     if (arg1 == arg2) {
         return 0;
     }
@@ -129,8 +142,19 @@ int list_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
     }
 
     else {
-        return list_compare(symbolTable, recordTable, type1[1], type2[1]);
+        return type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
     }
+}
+
+int tag_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
+    if (arg1 == arg2) {
+        return 0;
+    }
+
+    const RamDomain* type1 = recordTable->unpack(arg1, maxArity);
+    const RamDomain* type2 = recordTable->unpack(arg2, maxArity);
+
+    return type1[0] != type2[0];
 }
 
 int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
@@ -158,13 +182,13 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
         case Any:
             return 0;
         case Tuple:
-            return list_compare(symbolTable, recordTable, type1[1], type2[1]);
+            return type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Array:
             return type_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Union:
-            return list_compare(symbolTable, recordTable, type1[1], type2[1]);
+            return type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
         // case Function:
-        //     cmp = list_compare(symbolTable, recordTable, type1[1], type2[1]);
+        //     cmp = type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
         //     if (cmp == 0) {
         //         cmp = type_compare(symbolTable, recordTable, type1[2], type2[2]);
         //     }
@@ -174,8 +198,48 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
     }
 }
 
-RamDomain set_contains(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId, RamDomain value);
-RamDomain set_insert(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId, RamDomain value);
+RamDomain type_set_contains(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId, RamDomain value) {
+        if (setId == 0) { // set is nil
+        return 0;
+    }
+    const RamDomain* set = recordTable->unpack(setId, 2);
+    const RamDomain hd = set[0];
+    const RamDomain tl = set[1];
+    if (type_compare(symbolTable, recordTable, hd, value) == 0) {
+        return 1;
+    }
+    if (type_compare(symbolTable, recordTable, hd, value) > 0) {
+        return 0;
+    }
+    return type_set_contains(symbolTable, recordTable, tl, value);
+}
+
+RamDomain type_set_insert(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId, RamDomain value) {
+    if (setId == 0) { // set is nil
+        RamDomain newSet[2] = {value, 0};
+        return recordTable->pack(newSet, 2);
+    }
+    const RamDomain* set = recordTable->unpack(setId, 2);
+    const RamDomain hd = set[0];
+    const RamDomain tl = set[1];
+    if (type_compare(symbolTable, recordTable, hd, value) == 0) {
+        return setId;
+    }
+    else if (tag_compare(symbolTable, recordTable, hd, value) == 0) {
+        RamDomain newSet[2] = {
+            irTypeLub(symbolTable, recordTable, hd, value),
+            tl
+        };
+        return recordTable->pack(newSet, 2);
+    }
+    else if (type_compare(symbolTable, recordTable, hd, value) < 0) {
+        RamDomain newSet[2] = {hd, type_set_insert(symbolTable, recordTable, tl, value)};
+        return recordTable->pack(newSet, 2);
+    } else {
+        RamDomain newSet[2] = {value, setId};
+        return recordTable->pack(newSet, 2);
+    }
+}
 
 RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type1, RamDomain type2) {
     if (type1 == type2) {
@@ -204,30 +268,29 @@ RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     if (t1[0] == Union && t2[0] == Union) {
-        RamDomain newType[2] = {Union, set_union(symbolTable, recordTable, t1[1], t2[1])};
+        RamDomain newType[2] = {Union, type_set_union(symbolTable, recordTable, t1[1], t2[1])};
         return recordTable->pack(newType, 2);
     }
     if (t1[0] == Union) {
-        if (set_contains(symbolTable, recordTable, t1[1], type2)) {
+        if (type_set_contains(symbolTable, recordTable, t1[1], type2)) {
             return type1;
         }
-        RamDomain newType[2] = {Union, set_insert(symbolTable, recordTable, t1[1], type2)};
+        RamDomain newType[2] = {Union, type_set_insert(symbolTable, recordTable, t1[1], type2)};
         return recordTable->pack(newType, 2);
     }
     if (t2[0] == Union) {
-        if (set_contains(symbolTable, recordTable, t2[1], type1)) {
+        if (type_set_contains(symbolTable, recordTable, t2[1], type1)) {
             return type2;
         }
-        RamDomain newType[2] = {Union, set_insert(symbolTable, recordTable, t2[1], type1)};
+        RamDomain newType[2] = {Union, type_set_insert(symbolTable, recordTable, t2[1], type1)};
         return recordTable->pack(newType, 2);
     }
     if (type_compare(symbolTable, recordTable, type1, type2) == 0) {
         return type1;
     }
-    RamDomain newType[2] = {Union, set_create(symbolTable, recordTable, type1, type2)};
+    RamDomain newType[2] = {Union, type_set_create(symbolTable, recordTable, type1, type2)};
     return recordTable->pack(newType, 2);
 }
-
 
 RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
 
@@ -257,12 +320,12 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
 
     if (type1[0] == Union && type2[0] == Union) {
         newType[0] = Union;
-        newType[1] = set_intersect(symbolTable, recordTable, type1[1], type2[1]);
+        newType[1] = type_set_intersect(symbolTable, recordTable, type1[1], type2[1]);
         return recordTable->pack(newType, 2);
     }
 
     if (type1[0] == Union) {
-        if (set_contains(symbolTable, recordTable, type1[1], arg2)) {
+        if (type_set_contains(symbolTable, recordTable, type1[1], arg2)) {
             return arg2;
         }
         else {
@@ -272,7 +335,7 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     if (type2[0] == Union) {
-        if (set_contains(symbolTable, recordTable, type2[1], arg1)) {
+        if (type_set_contains(symbolTable, recordTable, type2[1], arg1)) {
             return arg1;
         }
         else {
@@ -349,6 +412,4 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
     // }
 
     return symbolTable->encode(typeNames[t[0]]);
-}
-
 }
