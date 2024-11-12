@@ -28,8 +28,10 @@ boolean_operator("&&").
 boolean_operator("||").
 
 .decl inferred_type(id: number, type: irType<>)
+inferred_type(id, $Integer()) :-
+    vertex(id, "Literal", _, value), IS_INTEGER(value).
 inferred_type(id, $Number()) :-
-    vertex(id, "Literal", _, value), IS_NUMERIC(value).
+    vertex(id, "Literal", _, value), IS_NUMERIC(value), !IS_INTEGER(value).
 inferred_type(id, $String()) :-
     vertex(id, "Literal", _, value), IS_STRING(value).
 inferred_type(id, $Boolean()) :-
