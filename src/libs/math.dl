@@ -5,5 +5,5 @@
 
 lib_method("Math", "floor").
 
-function_return_type("Math_floor", $Number()).
+function_return_type("Math_floor", $Integer()).
 function_parameters_type("Math_floor", to_string(0), $Number()).
