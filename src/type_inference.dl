@@ -10,10 +10,14 @@
 numeric_operator("+").
 numeric_operator("-").
 numeric_operator("*").
-numeric_operator("/").
-numeric_operator("%").
-numeric_operator(">>").
-numeric_operator(">>>").
+
+.decl float_operator(operator: symbol)
+float_operator("/").
+
+.decl integer_operator(operator: symbol)
+integer_operator("%").
+integer_operator(">>").
+integer_operator(">>>").
 
 .decl comparison_operator(operator: symbol)
 comparison_operator("==").
@@ -38,7 +42,15 @@ inferred_type(id, $Boolean()) :-
     vertex(id, "Literal", _, value), IS_BOOLEAN(value).
 
 inferred_type(id, $Number()) :-
-    vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator).
+    vertex(id, kind, _, operator), match(".*Operation", kind), float_operator(operator).
+inferred_type(id, $Integer()) :-
+    vertex(id, kind, _, operator), match(".*Operation", kind), integer_operator(operator).
+inferred_type(id, arg_type) :-
+    vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator),
+    edge(id, arg, _, _), inferred_type(arg, arg_type).
+
+
+
 inferred_type(id, type) :-
     vertex(id, "Phi", _, _), inferred_type(arg, type),
     (phi_args(id, arg, _) ; phi_args(id, _, arg)).
