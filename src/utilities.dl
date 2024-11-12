@@ -2,6 +2,9 @@
 #pragma once
 
 .functor is_numeric(value: symbol): number
+.functor is_integer(value: symbol): number
+
 #define IS_NUMERIC(value) (@is_numeric(value) = 1)
+#define IS_INTEGER(value) (@is_integer(value) = 1)
 #define IS_STRING(value) (match("\".*\"", value))
 #define IS_BOOLEAN(value) (match("true|false", value))
