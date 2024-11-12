@@ -286,6 +286,14 @@ RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
         RamDomain newType[2] = {Union, type_set_insert(symbolTable, recordTable, t2[1], type1)};
         return recordTable->pack(newType, 2);
     }
+
+    if (t1[0] == Integer && t2[0] == Number) {
+        return type2;
+    }
+    if (t1[0] == Number && t2[0] == Integer) {
+        return type1;
+    }
+
     if (type_compare(symbolTable, recordTable, type1, type2) == 0) {
         return type1;
     }
@@ -343,6 +351,13 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
             newType[0] = Bottom;
             return recordTable->pack(newType, 2);
         }
+    }
+
+    if (type1[0] == Integer && type2[0] == Number) {
+        return arg1;
+    }
+    if (type1[0] == Number && type2[0] == Integer) {
+        return arg2;
     }
 
     if (type_compare(symbolTable, recordTable, arg1, arg2) == 0) {
