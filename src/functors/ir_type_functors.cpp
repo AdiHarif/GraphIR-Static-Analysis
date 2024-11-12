@@ -391,6 +391,7 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "Integer1",
         "Bottom",
         // "Function",
+        "Integer64",
         "Float64",
         "StaticString",
         "Symbol",
