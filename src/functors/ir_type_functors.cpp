@@ -33,6 +33,7 @@ enum irType {
     Boolean,
     Bottom,
     // Function,
+    Integer,
     Number,
     String,
     Symbol,

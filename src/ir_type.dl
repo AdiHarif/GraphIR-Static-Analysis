@@ -10,6 +10,7 @@
     | Boolean {}
     | Bottom {}
     // | Function { parameters: irTypeList, return_type: irType }
+    | Integer {}
     | Number {}
     | String {}
     | Symbol {}
