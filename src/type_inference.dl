@@ -77,6 +77,9 @@ inferred_type(id, type) :-
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
 
+inferred_type(id, $Array($String())) :-
+    vertex(id, "Symbol", _, "argv").
+
 function_return_type(function, $Void()) :-
     vertex(id, "Return", _, _),
     function_return(function, id),
