@@ -1,0 +1,6 @@
+
+#pragma once
+
+#include "libs.dl"
+
+lib_variable("process", "argv", $Array($String())).

@@ -32,3 +32,14 @@ refers_to_function(v, full_name) :-
     vertex(lib_id, "Symbol", _, lib_name),
     lib_method(lib_name, method_name),
     full_name = cat(lib_name, cat("_", method_name)).
+
+
+.decl lib_variable(lib: symbol, name: symbol, type: irType<>)
+
+inferred_type(load, type) :-
+    lib_variable(lib, name, type),
+    vertex(load, "Load", _, _),
+    edge(load, property, _, "property"),
+    vertex(property, "Symbol", _, name),
+    edge(load, object, _, "object"),
+    vertex(object, "Symbol", _, lib).
