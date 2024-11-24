@@ -1,7 +1,8 @@
 
 # Build files
-*.o
+/obj
 libfunctors.so
+libfunctors.dylib
 
 # Output files
 out
