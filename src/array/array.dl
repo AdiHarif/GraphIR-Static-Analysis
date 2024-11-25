@@ -45,12 +45,18 @@ inferred_type(load, type) :-
     vertex(load, "Load", _, _),
     edge(load, array_ref, _, "object"),
     may_refer_to(array_ref, array),
+    edge(load, property, _, "property"),
+    vertex(property, vertex_kind, _, _),
+    vertex_kind != "Symbol",
     array_element_type(array, type).
 
 inferred_type(load, element_type) :-
     vertex(load, "Load", _, _),
     edge(load, array, _, "object"),
     inferred_type(array, array_type),
+    edge(load, property, _, "property"),
+    vertex(property, vertex_kind, _, _),
+    vertex_kind != "Symbol",
     element_type = @getArrayElementType(array_type).
 
 inferred_type(array, $Array(element_type)) :-
@@ -59,3 +65,5 @@ inferred_type(array, $Array(element_type)) :-
     may_refer_to(array_ref, array),
     edge(store, value, _, "value"),
     inferred_type(value, element_type).
+
+#include "array_method.dl"

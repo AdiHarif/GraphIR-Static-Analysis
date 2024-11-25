@@ -33,6 +33,11 @@ refers_to_function(v, full_name) :-
     lib_method(lib_name, method_name),
     full_name = cat(lib_name, cat("_", method_name)).
 
+inferred_type(call, type) :-
+    vertex(call, "Call", _, _),
+    edge(call, callee, _, "callee"),
+    refers_to_function(callee, full_name),
+    function_return_type(full_name, type).
 
 .decl lib_variable(lib: symbol, name: symbol, type: irType<>)
 
