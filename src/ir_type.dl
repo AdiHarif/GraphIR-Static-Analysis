@@ -30,3 +30,5 @@
     Glb -> @irTypeGlb(_,_),
     Top -> $Any()
 }
+
+.functor getArrayElementType(t: irType): irType stateful

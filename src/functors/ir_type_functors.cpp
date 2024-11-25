@@ -13,6 +13,7 @@ extern "C" {
     RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
     RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
     RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+    RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
 }
 
 // enum irType {
@@ -429,4 +430,13 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
     // }
 
     return symbolTable->encode(typeNames[t[0]]);
+}
+
+RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
+    const RamDomain* t = recordTable->unpack(type, maxArity);
+    if (t[0] == Array) {
+        return t[1];
+    }
+    const RamDomain bottom[2] = {Bottom, nil};
+    return recordTable->pack(bottom, 2);
 }
