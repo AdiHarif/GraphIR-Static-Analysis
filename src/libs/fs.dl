@@ -1,0 +1,10 @@
+
+#pragma once
+
+#include "libs.dl"
+
+lib_method("fs", "readFileSync").
+
+function_return_type("fs_readFileSync", $String()).
+function_parameters_type("fs_readFileSync", to_string(0), $String()).
+function_parameters_type("fs_readFileSync", to_string(1), $String()).
