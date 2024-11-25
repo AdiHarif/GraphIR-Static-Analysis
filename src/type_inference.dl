@@ -102,3 +102,4 @@ missing_type(id) :-
 #include "libs/math.dl"
 #include "libs/console.dl"
 #include "libs/process.dl"
+#include "libs/global.dl"

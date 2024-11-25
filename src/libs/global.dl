@@ -1,0 +1,5 @@
+
+#pragma once
+
+function_return_type("parseInt", $Integer()).
+function_parameters_type("parseInt", to_string(0), $String()).
