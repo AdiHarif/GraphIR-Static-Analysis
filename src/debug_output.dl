@@ -1,5 +1,5 @@
 
-#include "arrays.dl"
+#include "array/array.dl"
 #include "points_to.dl"
 #include "type_inference.dl"
 

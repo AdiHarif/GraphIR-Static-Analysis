@@ -1,6 +1,6 @@
 
 #include "type_inference.dl"
-#include "arrays.dl"
+#include "array/array.dl"
 #include "points_to.dl"
 #include "symbol_list.dl"
 #include "ir_type.dl"

@@ -1,10 +1,10 @@
 
 #pragma once
 
-#include "graph_definitions.dl"
-#include "type_inference.dl"
-#include "points_to.dl"
-#include "ir_type.dl"
+#include "../graph_definitions.dl"
+#include "../type_inference.dl"
+#include "../points_to.dl"
+#include "../ir_type.dl"
 
 .decl array_allocation(id: number)
 
