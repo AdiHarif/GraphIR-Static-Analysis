@@ -105,4 +105,6 @@ missing_type(id) :-
 #include "libs/global.dl"
 #include "libs/fs.dl"
 
+#include "string_method.dl"
+
 #include "accessors.dl"

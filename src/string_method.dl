@@ -1,0 +1,20 @@
+
+#pragma once
+
+#include "ir_type.dl"
+#include "libs/libs.dl"
+
+refers_to_function(v, full_name) :-
+    vertex(v, "Load", _, _),
+    edge(v, function_id, _, "property"),
+    vertex(function_id, "Symbol", _, method_name),
+    edge(v, string, _, "object"),
+    inferred_type(string, $String()),
+    lib_method("String", method_name),
+    full_name = cat("String_", method_name).
+
+lib_method("String", "substring").
+
+function_return_type("String_substring", $String()).
+function_parameters_type("String_substring", to_string(0), $Integer()).
+
