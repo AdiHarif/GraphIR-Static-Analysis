@@ -3,6 +3,7 @@
 
 #include "../ir_type.dl"
 #include "../libs/libs.dl"
+#include "../accessors.dl"
 
 refers_to_function(v, full_name) :-
     vertex(v, "Load", _, _),
@@ -17,3 +18,5 @@ lib_method("Array", "slice").
 
 function_return_type("Array_slice", $Array($String())).
 function_parameters_type("Array_slice", to_string(0), $Array($String())).
+
+getter("length", $Array($Any()), $Integer()).

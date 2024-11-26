@@ -104,3 +104,5 @@ missing_type(id) :-
 #include "libs/process.dl"
 #include "libs/global.dl"
 #include "libs/fs.dl"
+
+#include "accessors.dl"

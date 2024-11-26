@@ -1,0 +1,14 @@
+
+#pragma once
+
+#include "ir_type.dl"
+
+.decl getter(property: symbol, object_type: irType<>, return_type: irType<>)
+
+inferred_type(v, type) :-
+    vertex(v, "Load", _, _),
+    edge(v, property, _, "property"),
+    vertex(property, "Symbol", _, property_name),
+    edge(v, object, _, "object"),
+    inferred_type(object, object_type),
+    getter(property_name, object_type, type).
