@@ -30,6 +30,7 @@ comparison_operator(">=").
 .decl boolean_operator(operator: symbol)
 boolean_operator("&&").
 boolean_operator("||").
+boolean_operator("! (Prefix)").
 
 .decl inferred_type(id: number, type: irType<>)
 inferred_type(id, $Integer()) :-
@@ -59,7 +60,7 @@ inferred_type(id, $Boolean()) :-
     vertex(id, "BinaryOperation", _, operator), comparison_operator(operator).
 
 inferred_type(id, $Boolean()) :-
-    vertex(id, "BinaryOperation", _, operator), boolean_operator(operator).
+    vertex(id, kind, _, operator), match(".*Operation", kind), boolean_operator(operator).
 
 inferred_type(id, $Symbol()) :- vertex(id, "Symbol", _, _).
 
