@@ -1,8 +1,10 @@
 
 #include "post_processing.dl"
+#include "graph_transformation.dl"
 
 #ifndef NDEBUG
 #include "debug_output.dl"
 #endif
 
 .output full_type
+.output graph_transformation

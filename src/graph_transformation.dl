@@ -1,0 +1,29 @@
+
+#pragma once
+
+#include "ir_type.dl"
+#include "graph_definitions.dl"
+#include "type_inference.dl"
+
+.decl graph_transformation(kind: symbol, root: number)
+
+graph_transformation("string.substring", load) :-
+    vertex(load, "Load", _, _),
+    edge(load, string, _, "object"),
+    inferred_type(string, $String()),
+    edge(load, method, _, "property"),
+    vertex(method, "Symbol", _, "substring").
+
+graph_transformation("string.length", load) :-
+    vertex(load, "Load", _, _),
+    edge(load, array, _, "object"),
+    inferred_type(array, $String()),
+    edge(load, method, _, "property"),
+    vertex(method, "Symbol", _, "length").
+
+graph_transformation("Array.length", load) :-
+    vertex(load, "Load", _, _),
+    edge(load, array, _, "object"),
+    inferred_type(array, $Array($Bottom())),
+    edge(load, method, _, "property"),
+    vertex(method, "Symbol", _, "length").
