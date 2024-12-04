@@ -17,6 +17,7 @@ lib_method("String", "substring").
 
 function_return_type("String_substring", $String()).
 function_parameters_type("String_substring", to_string(0), $Integer()).
+function_parameters_type("String_substring", to_string(1), $Integer()).
 
 
 inferred_type(load, $String()) :-
