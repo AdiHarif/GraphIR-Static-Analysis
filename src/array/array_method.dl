@@ -17,6 +17,6 @@ refers_to_function(v, full_name) :-
 lib_method("Array", "slice").
 
 function_return_type("Array_slice", $Array($String())).
-function_parameters_type("Array_slice", to_string(0), $Array($String())).
+function_parameters_type("Array_slice", to_string(0), $Integer()).
 
 getter("length", $Array($Any()), $Integer()).
