@@ -1,0 +1,80 @@
+
+#include "graph_definitions.dl"
+
+.decl tainting_vertex(id: number)
+.input tainting_vertex(filename="in.csv", delimiter=",")
+
+.decl taints(src: number, dest: number)
+.output taints(filename="taints.csv", delimiter="\t")
+
+taints(a, a) :- data_vertex(a).
+taints(a, b) :- data_vertex(b), edge(b, a, "Data", _).
+taints(a, b) :- taints(a, mid), taints(mid, b).
+
+
+// .decl phi_taints(src: number, dest: number)
+// phi_taints(a, b) :-
+//     vertex(a, "Phi", _, _),
+//     taints(a, b).
+
+// .decl def_taints(src: number, dest: number)
+// //TODO: handle conditions where the Phi vertex is always tainted by a.
+// def_taints(a, b) :-
+//     taints(a, b),
+//     (
+//         !phi_taints(_, b) ;
+//         (
+//             phi_taints(phi, b),
+//             taints(c, phi),
+//             c != a
+//         )
+//     ).
+
+// .decl inf_control(data_vertex: number, control_vertex: number)
+// inf_control(d, c) :-
+//     vertex(branch, "Branch", _, _),
+//     vertex(merge, "Merge", _, _),
+//     edge(branch, merge, "Association", _), // ! currently not supported in graphir
+//     edge(branch, condition, "Data", _),
+//     taints(d, condition),
+//     reaching(branch, c),
+//     reaching(c, merge).
+
+// .decl ind_taints(src: number, dest: number)
+// ind_taints(a, b) :-
+//     vertex(branch, "Branch", _, _),
+//     vertex(merge, "Merge", _, _),
+//     edge(branch, merge, "Association", _), // ! currently not supported in graphir
+//     edge(branch, condition, "Data", _),
+//     taints(a, condition),
+//     edge(phi, merge, _, _),
+//     taints(phi, b).
+
+// .decl tainted_vertex(id: number)
+// tainted_vertex(u) :- tainting_vertex(v), taints(v, u).
+// .output tainted_vertex(filename="out.csv", delimiter=",")
+
+
+
+// .decl taints(src: number, dest: number)
+// taints(a, a) :- data_vertex(a).
+// taints(a, b) :- taints(a, mid), edge(mid, b, "data", _), data_vertex(b).
+
+// .decl taints_obj(src: number, dest: number, starting: number)
+// taints_obj(val, obj, store) :-
+//     vertex(store, "store", _),
+//     edge(obj, store, "data", "object"),
+//     edge(mid, store, "data", "value"),
+//     taints(val, mid).
+
+// TODO: consider tainting property selection
+
+// taints(val, load) :-
+//     vertex(load, "load", _),
+//     edge(obj, load, "data", "object"),
+//     taints_obj(val, obj, start),
+//     reaching(start, load).
+
+// TODO: add tainting rule for function calls
+
+
