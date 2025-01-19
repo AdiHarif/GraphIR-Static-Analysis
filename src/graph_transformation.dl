@@ -14,6 +14,16 @@ graph_transformation("string.substring", load) :-
     edge(load, method, _, "property"),
     vertex(method, "Symbol", _, "substring").
 
+graph_transformation("string.charCodeAt", load) :-
+    vertex(load, "Load", _, _),
+    edge(load, string, _, "object"),
+    inferred_type(string, $String()),
+    edge(load, method, _, "property"),
+    vertex(method, "Symbol", _, "charCodeAt"),
+    vertex(call, "Call", _, _),
+    edge(call, load, _, "callee"),
+    edge(load, call, _, "next").
+
 graph_transformation("string.length", load) :-
     vertex(load, "Load", _, _),
     edge(load, array, _, "object"),
