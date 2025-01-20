@@ -10,6 +10,10 @@
 numeric_operator("+").
 numeric_operator("-").
 numeric_operator("*").
+numeric_operator("++ (Postfix)").
+numeric_operator("++ (Prefix)").
+numeric_operator("-- (Postfix)").
+numeric_operator("-- (Prefix)").
 
 .decl float_operator(operator: symbol)
 float_operator("/").
