@@ -20,3 +20,8 @@ function_return_type("Array_slice", $Array($String())).
 function_parameters_type("Array_slice", to_string(0), $Integer()).
 
 getter("length", $Array($Any()), $Integer()).
+
+lib_method("Array", "join").
+
+function_return_type("Array_join", $String()).
+function_parameters_type("Array_join", to_string(0), $String()).
