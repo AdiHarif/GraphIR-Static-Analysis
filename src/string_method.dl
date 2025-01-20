@@ -19,6 +19,9 @@ function_return_type("String_substring", $String()).
 function_parameters_type("String_substring", to_string(0), $Integer()).
 function_parameters_type("String_substring", to_string(1), $Integer()).
 
+lib_method("String", "charCodeAt").
+function_return_type("String_charCodeAt", $Integer()).
+function_parameters_type("String_charCodeAt", to_string(0), $Integer()).
 
 inferred_type(load, $String()) :-
     vertex(load, "Load", _, _),
