@@ -3,3 +3,6 @@
 
 function_return_type("parseInt", $Integer()).
 function_parameters_type("parseInt", to_string(0), $String()).
+
+function_return_type("assert", $Void()).
+function_parameters_type("assert", to_string(0), $Boolean()).
