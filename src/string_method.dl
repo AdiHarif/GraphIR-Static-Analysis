@@ -23,6 +23,10 @@ lib_method("String", "charCodeAt").
 function_return_type("String_charCodeAt", $Integer()).
 function_parameters_type("String_charCodeAt", to_string(0), $Integer()).
 
+lib_method("String", "fromCharCode").
+function_return_type("String_fromCharCode", $String()).
+function_parameters_type("String_fromCharCode", to_string(0), $Integer()).
+
 inferred_type(load, $String()) :-
     vertex(load, "Load", _, _),
     edge(load, string, _, "object"),
