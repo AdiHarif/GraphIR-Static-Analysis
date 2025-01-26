@@ -30,7 +30,10 @@ may_refer_to(load, object) :-
     vertex(load, "Load", _, _),
     edge(load, containig_object_ref, _, "object"),
     may_refer_to(containig_object_ref, containig_object),
-    points_to(containig_object, object, _).
+    points_to(containig_object, object, _),
+    edge(load, property, _, "property"),
+    vertex(property, property_kind, _, _),
+    property_kind != "Symbol".
 
 .decl points_to(pointer: number, pointee: number, field: symbol)
 
