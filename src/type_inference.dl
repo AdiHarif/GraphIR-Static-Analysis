@@ -45,6 +45,8 @@ inferred_type(id, $String()) :-
     vertex(id, "Literal", _, value), IS_STRING(value).
 inferred_type(id, $Boolean()) :-
     vertex(id, "Literal", _, value), IS_BOOLEAN(value).
+inferred_type(id, $Undefined()) :-
+    vertex(id, "Literal", _, "undefined").
 
 inferred_type(id, $Number()) :-
     vertex(id, kind, _, operator), match(".*Operation", kind), float_operator(operator).
