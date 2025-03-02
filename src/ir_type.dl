@@ -17,6 +17,7 @@
     | Tuple { element_types: irTypeList }
     | Undefined {}
     | Union { types: irTypeSet }
+    | UserDefined { name: symbol }
     | Void {}
 
 .functor irTypeToString(t: irType): symbol stateful
