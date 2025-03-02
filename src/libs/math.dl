@@ -4,6 +4,13 @@
 #include "libs.dl"
 
 lib_method("Math", "floor").
-
 function_return_type("Math_floor", $Integer()).
 function_parameters_type("Math_floor", to_string(0), $Number()).
+
+lib_method("Math", "abs").
+function_return_type("Math_abs", $Number()).
+function_parameters_type("Math_abs", to_string(0), $Number()).
+
+lib_method("Math", "exp").
+function_return_type("Math_exp", $Number()).
+function_parameters_type("Math_exp", to_string(0), $Number()).
