@@ -41,6 +41,7 @@ enum irType {
     Tuple,
     Undefined,
     Union,
+    UserDefined,
     Void
 };
 
@@ -189,6 +190,8 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
             return type_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Union:
             return type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
+        case UserDefined:
+            return strcmp(symbolTable->decode(type1[1]).c_str(), symbolTable->decode(type2[1]).c_str());
         // case Function:
         //     cmp = type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
         //     if (cmp == 0) {
@@ -399,6 +402,7 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "Tuple",
         "Undefined",
         "Union",
+        "UserDefined",
         "Void"
     };
 
@@ -423,6 +427,9 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         return symbolTable->encode("DynamicArray<" + symbolTable->decode(elementString) + ">");
     }
 
+    if (t[0] == UserDefined) {
+        return symbolTable->encode("UserDefined<" + symbolTable->decode(t[1]) + ">");
+    }
     // if (t[0] == Function) {
     //     const RamDomain argString = symbolTable->encode(joinTypeList(symbolTable, recordTable, t[1]));
     //     const RamDomain retString = irTypeToString(symbolTable, recordTable, t[2]);
