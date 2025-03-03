@@ -60,6 +60,7 @@ inferred_type(load, element_type) :-
     element_type = @getArrayElementType(array_type).
 
 inferred_type(array, $Array(element_type)) :-
+    inferred_type(array, $Array($Bottom())),
     vertex(store, "Store", _, _),
     edge(store, array_ref, _, "object"),
     may_refer_to(array_ref, array),
