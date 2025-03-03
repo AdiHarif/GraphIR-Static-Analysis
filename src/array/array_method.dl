@@ -11,17 +11,10 @@ refers_to_function(v, full_name) :-
     vertex(function_id, "Symbol", _, method_name),
     edge(v, array, _, "object"),
     inferred_type(array, $Array($Bottom())),
-    lib_method("Array", method_name),
+    lib_method("Array", method_name, _),
     full_name = cat("Array_", method_name).
 
-lib_method("Array", "slice").
-
-function_return_type("Array_slice", $Array($String())).
-function_parameters_type("Array_slice", to_string(0), $Integer()).
+lib_method("Array", "slice", $Function($String(), [$Integer(), nil])).
+lib_method("Array", "join", $Function($String(), [$String(), nil])).
 
 getter("length", $Array($Any()), $Integer()).
-
-lib_method("Array", "join").
-
-function_return_type("Array_join", $String()).
-function_parameters_type("Array_join", to_string(0), $String()).

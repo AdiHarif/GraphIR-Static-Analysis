@@ -10,22 +10,12 @@ refers_to_function(v, full_name) :-
     vertex(function_id, "Symbol", _, method_name),
     edge(v, string, _, "object"),
     inferred_type(string, $String()),
-    lib_method("String", method_name),
+    lib_method("String", method_name, _),
     full_name = cat("String_", method_name).
 
-lib_method("String", "substring").
-
-function_return_type("String_substring", $String()).
-function_parameters_type("String_substring", to_string(0), $Integer()).
-function_parameters_type("String_substring", to_string(1), $Integer()).
-
-lib_method("String", "charCodeAt").
-function_return_type("String_charCodeAt", $Integer()).
-function_parameters_type("String_charCodeAt", to_string(0), $Integer()).
-
-lib_method("String", "fromCharCode").
-function_return_type("String_fromCharCode", $String()).
-function_parameters_type("String_fromCharCode", to_string(0), $Integer()).
+lib_method("String", "substring", $Function($String(), [$Integer(),[$Integer(), nil]])).
+lib_method("String", "charCodeAt", $Function($Integer(), [$Integer(), nil])).
+lib_method("String", "fromCharCode", $Function($String(), [$Integer(), nil])).
 
 inferred_type(load, $String()) :-
     vertex(load, "Load", _, _),

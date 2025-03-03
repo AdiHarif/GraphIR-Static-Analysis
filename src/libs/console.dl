@@ -4,7 +4,4 @@
 #include "libs.dl"
 #include "../ir_type.dl"
 
-lib_method("console", "log").
-
-function_return_type("console_log", $Void()).
-function_parameters_type("console_log", to_string(0), $String()).
+lib_method("console", "log", $Function($Void(), [$String(), nil])).
