@@ -10,7 +10,6 @@
 .output points_to
 .output inferred_type
 .output missing_type
-.output params_list
 .output refers_to_function
 
 #endif
