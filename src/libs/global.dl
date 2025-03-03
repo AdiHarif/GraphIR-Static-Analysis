@@ -1,8 +1,12 @@
 
 #pragma once
 
-function_return_type("parseInt", $Integer()).
-function_parameters_type("parseInt", to_string(0), $String()).
+.decl global_function(name: symbol, signature: irType<>)
 
-function_return_type("assert", $Void()).
-function_parameters_type("assert", to_string(0), $Boolean()).
+global_function("parseInt", $Function($Integer(), [$String(), nil])).
+global_function("assert", $Function($Void(), [$Boolean(), nil])).
+
+inferred_type(symbol, type) :-
+    // TODO: make sure this is inface a global function and not a symbol used in a load
+    vertex(symbol, "Symbol", _, callee_name),
+    global_function(callee_name, type).
