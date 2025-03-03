@@ -34,3 +34,6 @@
 .functor getArrayElementType(t: irType): irType stateful
 .functor getFunctionRetType(t: irType): irType stateful
 .functor getFunctionParamType(t: irType, index: number): irType stateful
+
+.functor functionRetTemplate(ret: irType): irType stateful
+.functor functionParamTemplate(param: irType, index: number): irType stateful

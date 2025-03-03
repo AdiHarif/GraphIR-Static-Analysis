@@ -16,6 +16,8 @@ extern "C" {
     RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getFunctionRetType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getFunctionParamType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type, RamDomain index);
+    RamDomain functionRetTemplate(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+    RamDomain functionParamTemplate(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type, RamDomain index);
 }
 
 // enum irType {
@@ -510,3 +512,24 @@ RamDomain getFunctionParamType(SymbolTable* symbolTable, RecordTable* recordTabl
     }
     return args[0];
 }
+
+RamDomain functionRetTemplate(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
+    const RamDomain sig[2] = { type, nil };
+    const RamDomain f[2] = { Function, recordTable->pack(sig, 2) };
+    return recordTable->pack(f, 2);
+}
+
+RamDomain functionParamTemplate(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type, RamDomain index) {
+    const RamDomain bottom[2] = {Bottom, nil};
+    RamDomain params[2] = { type, nil };
+    while (index--) {
+        params[1] = recordTable->pack(params, 2);
+        params[0] = recordTable->pack(bottom, 2);
+    }
+
+    const RamDomain sig[2] = { recordTable->pack(bottom, 2), recordTable->pack(params, 2) };
+
+    const RamDomain f[2] = { Function, recordTable->pack(sig, 2) };
+    return recordTable->pack(f, 2);
+}
+
