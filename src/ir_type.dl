@@ -13,7 +13,6 @@
     | Integer {}
     | Number {}
     | String {}
-    | Symbol {}
     | Tuple { element_types: irTypeList }
     | Undefined {}
     | Union { types: irTypeSet }

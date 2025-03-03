@@ -37,7 +37,6 @@ enum irType {
     Integer,
     Number,
     String,
-    Symbol,
     Tuple,
     Undefined,
     Union,
@@ -180,7 +179,6 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
         case Number:
         case Boolean:
         case String:
-        case Symbol:
         case Void:
         case Any:
             return 0;
@@ -398,7 +396,6 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "Integer64",
         "Float64",
         "StaticString",
-        "Symbol",
         "Tuple",
         "Undefined",
         "Union",
