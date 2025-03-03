@@ -106,8 +106,9 @@ inferred_type(id, type) :-
 
 .decl missing_type(id: number)
 missing_type(id) :-
-    vertex(id, _, category, _),
+    vertex(id, kind, category, _),
     category != "Control",
+    kind != "Symbol",
     !inferred_type(id, _).
 
 #include "libs/math.dl"
