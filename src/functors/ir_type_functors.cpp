@@ -502,6 +502,11 @@ RamDomain getFunctionParamType(SymbolTable* symbolTable, RecordTable* recordTabl
         return recordTable->pack(bottom, 2);
     }
     const RamDomain* sig = recordTable->unpack(t[1], 2);
+    if (sig[1] == nil) {
+        const RamDomain bottom[2] = {Bottom, nil};
+        return recordTable->pack(bottom, 2);
+    }
+
     const RamDomain* args = recordTable->unpack(sig[1], maxArity);
     while (index--) {
         if (args[1] == nil) {
@@ -532,4 +537,3 @@ RamDomain functionParamTemplate(SymbolTable* symbolTable, RecordTable* recordTab
     const RamDomain f[2] = { Function, recordTable->pack(sig, 2) };
     return recordTable->pack(f, 2);
 }
-
