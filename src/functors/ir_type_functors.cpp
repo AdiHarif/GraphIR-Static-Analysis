@@ -33,7 +33,7 @@ enum irType {
     Array,
     Boolean,
     Bottom,
-    // Function,
+    Function,
     Integer,
     Number,
     String,
@@ -172,6 +172,8 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
     }
 
     int cmp;
+    const RamDomain* sig1;
+    const RamDomain* sig2;
 
     switch (type1[0]) {
         case Bottom:
@@ -190,12 +192,14 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
             return type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
         case UserDefined:
             return strcmp(symbolTable->decode(type1[1]).c_str(), symbolTable->decode(type2[1]).c_str());
-        // case Function:
-        //     cmp = type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
-        //     if (cmp == 0) {
-        //         cmp = type_compare(symbolTable, recordTable, type1[2], type2[2]);
-        //     }
-        //     return cmp;
+        case Function:
+            sig1 = recordTable->unpack(type1[1], 2);
+            sig2 = recordTable->unpack(type2[1], 2);
+            cmp = type_compare(symbolTable, recordTable, sig1[0], sig2[0]);
+            if (cmp == 0) {
+                cmp = type_list_compare(symbolTable, recordTable, sig1[1], sig2[1]);
+            }
+            return cmp;
         default:
             throw std::runtime_error("Unexpected irType constructor");
     }
@@ -243,6 +247,7 @@ RamDomain type_set_insert(SymbolTable* symbolTable, RecordTable* recordTable, Ra
         return recordTable->pack(newSet, 2);
     }
 }
+RamDomain irTypeListLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type1, RamDomain type2);
 
 RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type1, RamDomain type2) {
     if (type1 == type2) {
@@ -296,10 +301,40 @@ RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
         return type1;
     }
 
+    if (t1[0] == Function && t2[0] == Function) {
+        const RamDomain* sig1 = recordTable->unpack(t1[1], 2);
+        const RamDomain* sig2 = recordTable->unpack(t2[1], 2);
+        RamDomain newSig[2] = {
+            irTypeLub(symbolTable, recordTable, sig1[0], sig2[0]),
+            irTypeListLub(symbolTable, recordTable, sig1[1], sig2[1])
+        };
+        RamDomain newType[2] = {Function, recordTable->pack(newSig, 2)};
+        return recordTable->pack(newType, 2);
+    }
+
     if (type_compare(symbolTable, recordTable, type1, type2) == 0) {
         return type1;
     }
     RamDomain newType[2] = {Union, type_set_create(symbolTable, recordTable, type1, type2)};
+    return recordTable->pack(newType, 2);
+}
+
+RamDomain irTypeListLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
+    if (arg1 == nil) {
+        return arg2;
+    }
+    if (arg2 == nil) {
+        return arg1;
+    }
+
+    const RamDomain* list1 = recordTable->unpack(arg1, maxArity);
+    const RamDomain* list2 = recordTable->unpack(arg2, maxArity);
+
+    RamDomain newType[2];
+
+    newType[0] = irTypeLub(symbolTable, recordTable, list1[0], list2[0]);
+    newType[1] = irTypeListLub(symbolTable, recordTable, list1[1], list2[1]);
+
     return recordTable->pack(newType, 2);
 }
 
@@ -392,7 +427,7 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "DynamicArray",
         "Integer1",
         "Bottom",
-        // "Function",
+        "Function",
         "Integer64",
         "Float64",
         "StaticString",
@@ -427,11 +462,12 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
     if (t[0] == UserDefined) {
         return symbolTable->encode("UserDefined<" + symbolTable->decode(t[1]) + ">");
     }
-    // if (t[0] == Function) {
-    //     const RamDomain argString = symbolTable->encode(joinTypeList(symbolTable, recordTable, t[1]));
-    //     const RamDomain retString = irTypeToString(symbolTable, recordTable, t[2]);
-    //     return symbolTable->encode("[" + symbolTable->decode(argString) + "]" + " -> " + symbolTable->decode(retString));
-    // }
+    if (t[0] == Function) {
+        const RamDomain* sig = recordTable->unpack(t[1], 2);
+        const RamDomain retString = irTypeToString(symbolTable, recordTable, sig[0]);
+        const RamDomain argString = symbolTable->encode(joinTypeList(symbolTable, recordTable, sig[1]));
+        return symbolTable->encode("[" + symbolTable->decode(argString) + "]" + "->" + symbolTable->decode(retString));
+    }
 
     return symbolTable->encode(typeNames[t[0]]);
 }
