@@ -9,9 +9,7 @@
 .output may_refer_to
 .output points_to
 .output inferred_type
-.output function_return_type
 .output missing_type
-.output function_parameters_type
 .output params_list
 .output refers_to_function
 

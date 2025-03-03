@@ -11,17 +11,6 @@ inferred_type(load, type) :-
     vertex(object, "Symbol", _, lib),
     lib_method(lib, method, type).
 
-inferred_type(id, type) :-
-    vertex(id, "Call", _, _),
-    edge(id, symbol_id, _, "callee"),
-    vertex(symbol_id, "Load", _, _),
-    edge(symbol_id, method_id, _, "property"),
-    vertex(method_id, _, _, method),
-    lib_method(lib, method, _),
-    full_name = cat(lib, cat("_", method)),
-    function_return_type(full_name, type).
-
-
 .decl refers_to_function(v: number, f: symbol)
 
 refers_to_function(v, full_name) :-
@@ -32,12 +21,6 @@ refers_to_function(v, full_name) :-
     vertex(lib_id, "Symbol", _, lib_name),
     lib_method(lib_name, method_name, _),
     full_name = cat(lib_name, cat("_", method_name)).
-
-inferred_type(call, type) :-
-    vertex(call, "Call", _, _),
-    edge(call, callee, _, "callee"),
-    refers_to_function(callee, full_name),
-    function_return_type(full_name, type).
 
 .decl lib_variable(lib: symbol, name: symbol, type: irType<>)
 

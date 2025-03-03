@@ -81,24 +81,28 @@ inferred_type(id, @getFunctionRetType(function_type)) :-
     edge(id, callee, _, "callee"),
     inferred_type(callee, function_type).
 
+inferred_type(symbol, @functionRetTemplate($Void())) :-
+    vertex(symbol, "Symbol", _, name),
+    function_return(name, ret),
+    !edge(ret, _, _, "value").
+
+inferred_type(symbol, @functionRetTemplate(ret_type)) :-
+    vertex(symbol, "Symbol", _, name),
+    function_return(name, ret),
+    edge(ret, value, _, "value"),
+    inferred_type(value, ret_type).
+
+inferred_type(callee, @functionParamTemplate(param_type, to_number(index))) :-
+    vertex(call, "Call", _, _),
+    edge(call, callee, _, "callee"),
+    edge(call, param, _, index),
+    IS_NUMERIC(index),
+    inferred_type(param, param_type).
+
+
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
 
-function_return_type(function, $Void()) :-
-    vertex(id, "Return", _, _),
-    function_return(function, id),
-    !edge(id, _, _, "value").
-
-function_return_type(function, type) :-
-    vertex(id, "Return", _, _),
-    function_return(function, id),
-    edge(id, value, _, "value"), inferred_type(value, type).
-
-function_parameters_type(function, index, type) :-
-    vertex(call, "Call", _, _),
-    edge(call, parameter, _, index), IS_NUMERIC(index),
-    inferred_type(parameter, type),
-    edge(call, callee, _, "callee"), vertex(callee, "Symbol", _, function).
 
 .decl missing_type(id: number)
 missing_type(id) :-
