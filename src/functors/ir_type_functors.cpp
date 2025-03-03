@@ -14,6 +14,8 @@ extern "C" {
     RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
     RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+    RamDomain getFunctionRetType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+    RamDomain getFunctionParamType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type, RamDomain index);
 }
 
 // enum irType {
@@ -479,4 +481,32 @@ RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable
     }
     const RamDomain bottom[2] = {Bottom, nil};
     return recordTable->pack(bottom, 2);
+}
+
+RamDomain getFunctionRetType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
+    const RamDomain* t = recordTable->unpack(type, maxArity);
+    if (t[0] == Function) {
+        const RamDomain* sig = recordTable->unpack(t[1], 2);
+        return sig[0];
+    }
+    const RamDomain bottom[2] = {Bottom, nil};
+    return recordTable->pack(bottom, 2);
+}
+
+RamDomain getFunctionParamType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type, RamDomain index) {
+    const RamDomain* t = recordTable->unpack(type, maxArity);
+    if (t[0] != Function) {
+        const RamDomain bottom[2] = {Bottom, nil};
+        return recordTable->pack(bottom, 2);
+    }
+    const RamDomain* sig = recordTable->unpack(t[1], 2);
+    const RamDomain* args = recordTable->unpack(sig[1], maxArity);
+    while (index--) {
+        if (args[1] == nil) {
+            const RamDomain bottom[2] = {Bottom, nil};
+            return recordTable->pack(bottom, 2);
+        }
+        args = recordTable->unpack(args[1], maxArity);
+    }
+    return args[0];
 }

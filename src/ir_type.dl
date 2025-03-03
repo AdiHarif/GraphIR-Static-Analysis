@@ -32,3 +32,5 @@
 }
 
 .functor getArrayElementType(t: irType): irType stateful
+.functor getFunctionRetType(t: irType): irType stateful
+.functor getFunctionParamType(t: irType, index: number): irType stateful

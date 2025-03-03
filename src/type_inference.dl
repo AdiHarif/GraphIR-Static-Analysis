@@ -69,16 +69,17 @@ inferred_type(id, $Boolean()) :-
 inferred_type(id, $Boolean()) :-
     vertex(id, kind, _, operator), match(".*Operation", kind), boolean_operator(operator).
 
-inferred_type(id, type) :-
-    vertex(id, "Parameter", _, _),
-    function_parameter(function, id, index),
-    function_parameters_type(function, index, type).
+inferred_type(param, @getFunctionParamType(function_type, index)) :-
+    vertex(param, "Parameter", _, _),
+    edge(symbol, param, _, index_string),
+    IS_INTEGER(index_string),
+    index = to_number(index_string),
+    inferred_type(symbol, function_type).
 
-inferred_type(id, type) :-
+inferred_type(id, @getFunctionRetType(function_type)) :-
     vertex(id, "Call", _, _),
-    edge(id, symbol_id, _, "callee"), vertex(symbol_id, "Symbol", _, function),
-    function_return_type(function, type).
-
+    edge(id, callee, _, "callee"),
+    inferred_type(callee, function_type).
 
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
