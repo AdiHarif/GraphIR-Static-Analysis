@@ -1,0 +1,6 @@
+
+#pragma once
+
+#include "libs.dl"
+
+lib_method("performance", "now", $Function($Number(), nil)).
