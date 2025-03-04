@@ -1,0 +1,10 @@
+
+#pragma once
+
+#include "type_inference.dl"
+#include "ir_type.dl"
+
+inferred_type(alloc, $UserDefined("Error")) :-
+    vertex(alloc, "Allocation", _, _),
+    edge(alloc, class_symbol, _, "callee"),
+    vertex(class_symbol, "Symbol", _, "Error").

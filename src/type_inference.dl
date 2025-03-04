@@ -125,5 +125,6 @@ missing_type(id) :-
 #include "libs/performance.dl"
 
 #include "string_method.dl"
+#include "error.dl"
 
 #include "accessors.dl"
