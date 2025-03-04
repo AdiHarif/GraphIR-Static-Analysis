@@ -11,6 +11,7 @@
     | Bottom {}
     | Function {  return_type: irType, parameters: irTypeList }
     | Integer {}
+    | Null {}
     | Number {}
     | String {}
     | Tuple { element_types: irTypeList }

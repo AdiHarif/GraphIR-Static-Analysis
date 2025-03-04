@@ -39,6 +39,7 @@ enum irType {
     Bottom,
     Function,
     Integer,
+    Null,
     Number,
     String,
     Tuple,
@@ -182,6 +183,7 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
     switch (type1[0]) {
         case Bottom:
         case Undefined:
+        case Null:
         case Number:
         case Boolean:
         case String:
@@ -433,6 +435,7 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "Bottom",
         "Function",
         "Integer64",
+        "Null",
         "Float64",
         "StaticString",
         "Tuple",

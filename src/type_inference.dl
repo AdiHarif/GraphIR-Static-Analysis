@@ -54,6 +54,8 @@ inferred_type(id, $Boolean()) :-
     vertex(id, "Literal", _, value), IS_BOOLEAN(value).
 inferred_type(id, $Undefined()) :-
     vertex(id, "Literal", _, "undefined").
+inferred_type(id, $Null()) :-
+    vertex(id, "Literal", _, "null").
 
 inferred_type(id, $Number()) :-
     vertex(id, kind, _, operator), match(".*Operation", kind), float_operator(operator).
@@ -105,6 +107,10 @@ inferred_type(callee, @functionParamTemplate(param_type, to_number(index))) :-
     IS_NUMERIC(index),
     inferred_type(param, param_type).
 
+inferred_type(symbol, $Function($Bottom(), nil)) :-
+    vertex(call, "Call", _, _),
+    edge(call, symbol, _, "callee"),
+    vertex(symbol, "Symbol", _, _).
 
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
