@@ -112,6 +112,23 @@ inferred_type(symbol, $Function($Bottom(), nil)) :-
     edge(call, symbol, _, "callee"),
     vertex(symbol, "Symbol", _, _).
 
+
+inferred_type(alloc, $Object($Bottom())) :-
+    vertex(alloc, "Allocation", _, _),
+    !edge(alloc, _, _, "callee").
+
+inferred_type(load, @getObjectValueType(type)) :-
+    vertex(load, "Load", _, _),
+    edge(load, object, _, "object"),
+    inferred_type(object, type).
+
+inferred_type(object, $Object(value_type)) :-
+    vertex(store, "Store", _, _),
+    edge(store, object, _, "object"),
+    inferred_type(object, $Object($Bottom())),
+    edge(store, value, _, "value"),
+    inferred_type(value, value_type).
+
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
 

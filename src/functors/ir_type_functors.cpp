@@ -14,6 +14,7 @@ extern "C" {
     RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
     RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+    RamDomain getObjectValueType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getFunctionRetType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getFunctionParamType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type, RamDomain index);
     RamDomain functionRetTemplate(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
@@ -42,6 +43,7 @@ enum irType {
     Null,
     Number,
     String,
+    Object,
     Tuple,
     Undefined,
     Union,
@@ -193,6 +195,7 @@ int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain a
         case Tuple:
             return type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Array:
+        case Object:
             return type_compare(symbolTable, recordTable, type1[1], type2[1]);
         case Union:
             return type_list_compare(symbolTable, recordTable, type1[1], type2[1]);
@@ -278,6 +281,11 @@ RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
 
     if (t1[0] == Array && t2[0] == Array) {
         RamDomain newType[2] = {Array, irTypeLub(symbolTable, recordTable, t1[1], t2[1])};
+        return recordTable->pack(newType, 2);
+    }
+
+    if (t1[0] == Object && t2[0] == Object) {
+        RamDomain newType[2] = {Object, irTypeLub(symbolTable, recordTable, t1[1], t2[1])};
         return recordTable->pack(newType, 2);
     }
 
@@ -370,6 +378,11 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
         return recordTable->pack(newType, 2);
     }
 
+    if (type1[0] == Object && type2[0] == Object) {
+        RamDomain newType[2] = {Array, irTypeGlb(symbolTable, recordTable, type1[1], type2[1])};
+        return recordTable->pack(newType, 2);
+    }
+
     if (type1[0] == Union && type2[0] == Union) {
         newType[0] = Union;
         newType[1] = type_set_intersect(symbolTable, recordTable, type1[1], type2[1]);
@@ -437,6 +450,7 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         "Integer64",
         "Null",
         "Float64",
+        "Object",
         "StaticString",
         "Tuple",
         "Undefined",
@@ -461,9 +475,10 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
         return symbolTable->encode(result);
     }
 
-    if (t[0] == Array) {
+    if (t[0] == Array || t[0] == Object) {
+        const string base = typeNames[t[0]];
         const RamDomain elementString = irTypeToString(symbolTable, recordTable, t[1]);
-        return symbolTable->encode("DynamicArray<" + symbolTable->decode(elementString) + ">");
+        return symbolTable->encode(base + "<" + symbolTable->decode(elementString) + ">");
     }
 
     if (t[0] == UserDefined) {
@@ -482,6 +497,15 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
 RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
     const RamDomain* t = recordTable->unpack(type, maxArity);
     if (t[0] == Array) {
+        return t[1];
+    }
+    const RamDomain bottom[2] = {Bottom, nil};
+    return recordTable->pack(bottom, 2);
+}
+
+RamDomain getObjectValueType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
+    const RamDomain* t = recordTable->unpack(type, maxArity);
+    if (t[0] == Object) {
         return t[1];
     }
     const RamDomain bottom[2] = {Bottom, nil};
