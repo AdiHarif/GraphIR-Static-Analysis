@@ -21,12 +21,18 @@ float_operator("/").
 
 .decl integer_operator(operator: symbol)
 integer_operator("%").
+integer_operator("<<").
 integer_operator(">>").
 integer_operator(">>>").
+integer_operator("^").
+integer_operator("|").
+integer_operator("&").
 
 .decl comparison_operator(operator: symbol)
 comparison_operator("==").
+comparison_operator("===").
 comparison_operator("!=").
+comparison_operator("!==").
 comparison_operator("<").
 comparison_operator("<=").
 comparison_operator(">").
