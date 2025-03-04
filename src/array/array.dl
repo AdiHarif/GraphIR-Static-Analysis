@@ -67,4 +67,17 @@ inferred_type(array, $Array(element_type)) :-
     edge(store, value, _, "value"),
     inferred_type(value, element_type).
 
+.decl typed_array(name: symbol, type: irType<>)
+typed_array("Int8Array", $Array($Integer())).
+typed_array("Int32Array", $Array($Integer())).
+typed_array("UInt32Array", $Array($Integer())).
+typed_array("Float32Array", $Array($Number())).
+typed_array("Float64Array", $Array($Number())).
+
+inferred_type(array, type) :-
+    vertex(array, "Allocation", _, _),
+    edge(array, callee, _, "callee"),
+    vertex(callee, "Symbol", _, name),
+    typed_array(name, type).
+
 #include "array_method.dl"
