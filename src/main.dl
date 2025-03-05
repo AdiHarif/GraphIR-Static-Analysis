@@ -2,6 +2,7 @@
 #include "post_processing.dl"
 #include "graph_transformation.dl"
 #include "global_variable.dl"
+#include "class.dl"
 
 #ifndef NDEBUG
 #include "debug_output.dl"
