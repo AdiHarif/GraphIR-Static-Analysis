@@ -1,0 +1,63 @@
+
+#pragma once
+
+#include "ir_type.dl"
+#include "type_inference.dl"
+
+.functor getClassName(full_name: symbol): symbol stateful
+.functor getMethodName(full_name: symbol): symbol stateful
+.functor isMethod(full_name: symbol): number stateful
+
+#define IS_METHOD(value) (contains("::", value))
+
+.decl class_method(class_name: symbol, method_name: symbol, symbol_vertex: number)
+
+class_method(@getClassName(full_name), @getMethodName(full_name), method_symbol) :-
+    vertex(method_symbol, "Symbol", _, full_name),
+    IS_METHOD(full_name).
+
+.output class_method
+
+inferred_type(this, $UserDefined(name)) :-
+    vertex(method, _, _, _),
+    class_method(name, _, method),
+    edge(method, this, _, "this").
+
+
+inferred_type(alloc, $UserDefined(class_name)) :-
+    vertex(alloc, "Allocation", _, _),
+    edge(alloc, class_symbol, _, "callee"),
+    vertex(class_symbol, "Symbol", _, class_name),
+    vertex(_, "Symbol", _, cat(class_name, "::constructor")).
+
+may_refer_to(parameter, argument) :-
+    vertex(alloc, "Allocation", _, _),
+    edge(alloc, argument, _, index), IS_NUMERIC(index),
+    edge(alloc, class_symbol, _, "callee"),
+    vertex(class_symbol, "Symbol", _, class_name),
+    class_method(class_name, "constructor", _),
+    function_parameter(cat(class_name, "::constructor"), parameter, index).
+
+
+.decl class_field(class_name: symbol, field_name: symbol, field_type: irType<>)
+
+class_field(class_name, field_name, field_type) :-
+    vertex(store, "Store", _, _),
+    edge(store, property, _, "property"),
+    vertex(property, "Symbol", _, field_name),
+    edge(store, object, _, "object"),
+    class_method(class_name, _, _),
+    inferred_type(object, $UserDefined(class_name)),
+    edge(store, value, _, "value"),
+    inferred_type(value, field_type).
+
+inferred_type(load, field_type) :-
+    vertex(load, "Load", _, _),
+    edge(load, property, _, "property"),
+    vertex(property, "Symbol", _, field_name),
+    class_field(class_name, field_name, field_type),
+    edge(load, object, _, "object"),
+    inferred_type(object, $UserDefined(class_name)).
+
+.output class_field
+.output function_parameter

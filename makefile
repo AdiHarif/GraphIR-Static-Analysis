@@ -8,7 +8,7 @@ run:
 
 functors: libfunctors.so
 
-libfunctors.so: ${addprefix obj/, functors.o set_functors.o list_functors.o ir_type_functors.o}
+libfunctors.so: ${addprefix obj/, functors.o set_functors.o list_functors.o ir_type_functors.o class_functors.o}
 	g++ -shared -o $@ $+ 
 
 obj/%.o: src/functors/%.cpp

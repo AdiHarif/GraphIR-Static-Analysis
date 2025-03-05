@@ -11,5 +11,7 @@
 .output inferred_type
 .output missing_type
 .output refers_to_function
+.output class_field
+.output function_parameter
 
 #endif
