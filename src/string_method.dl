@@ -23,3 +23,10 @@ inferred_type(load, $String()) :-
     inferred_type(string, $String()),
     edge(load, property, _, "property"),
     inferred_type(property, $Integer()).
+
+inferred_type(load, $Function($String(), [$Number(), nil])) :-
+    vertex(load, "Load", _, _),
+    edge(load, number, _, "object"),
+    inferred_type(number, $Number()),
+    edge(load, property, _, "property"),
+    vertex(property, "Symbol", _, "toFixed").
