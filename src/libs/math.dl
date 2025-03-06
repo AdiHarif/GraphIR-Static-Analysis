@@ -4,5 +4,18 @@
 #include "libs.dl"
 
 lib_method("Math", "floor", $Function($Integer(), [$Number(), nil])).
+lib_method("Math", "ceil", $Function($Integer(), [$Number(), nil])).
+lib_method("Math", "round", $Function($Integer(), [$Number(), nil])).
+
 lib_method("Math", "abs", $Function($Number(), [$Number(), nil])).
 lib_method("Math", "exp", $Function($Number(), [$Number(), nil])).
+lib_method("Math", "log", $Function($Number(), [$Number(), nil])).
+lib_method("Math", "sqrt", $Function($Number(), [$Number(), nil])).
+lib_method("Math", "pow", $Function($Number(), [$Number(), [$Number(), nil]])).
+lib_method("Math", "max", $Function($Number(), [$Number(), [$Number(), nil]])).
+lib_method("Math", "min", $Function($Number(), [$Number(), [$Number(), nil]])).
+lib_method("Math", "sin", $Function($Number(), [$Number(), nil])).
+lib_method("Math", "cos", $Function($Number(), [$Number(), nil])).
+
+lib_variable("Math", "PI", $Number()).
+lib_variable("Math", "LN10", $Number()).
