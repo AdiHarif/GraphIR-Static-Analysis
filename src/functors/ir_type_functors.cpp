@@ -42,8 +42,8 @@ enum irType {
     Integer,
     Null,
     Number,
-    String,
     Object,
+    String,
     Tuple,
     Undefined,
     Union,
@@ -379,7 +379,7 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     if (type1[0] == Object && type2[0] == Object) {
-        RamDomain newType[2] = {Array, irTypeGlb(symbolTable, recordTable, type1[1], type2[1])};
+        RamDomain newType[2] = {Object, irTypeGlb(symbolTable, recordTable, type1[1], type2[1])};
         return recordTable->pack(newType, 2);
     }
 
