@@ -6,6 +6,11 @@
 #include "../points_to.dl"
 #include "../ir_type.dl"
 
+inferred_type(alloc, $Array($Bottom())) :-
+    vertex(alloc, "Allocation", _, _),
+    edge(alloc, callee, _, "callee"),
+    vertex(callee, "Symbol", _, "Array").
+
 .decl array_allocation(id: number)
 
 array_allocation(id) :-
