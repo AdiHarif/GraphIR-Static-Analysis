@@ -107,6 +107,13 @@ inferred_type(callee, @functionParamTemplate(param_type, to_number(index))) :-
     IS_NUMERIC(index),
     inferred_type(param, param_type).
 
+inferred_type(callee, @functionParamTemplate($Undefined(), to_number(index))) :-
+    vertex(call, "Call", _, _),
+    edge(call, callee, _, "callee"),
+    edge(callee, _, _, index),
+    IS_NUMERIC(index),
+    !edge(call, _, _, index).
+
 inferred_type(symbol, $Function($Bottom(), nil)) :-
     vertex(call, "Call", _, _),
     edge(call, symbol, _, "callee"),
