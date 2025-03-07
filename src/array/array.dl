@@ -62,7 +62,7 @@ inferred_type(load, element_type) :-
     edge(load, property, _, "property"),
     vertex(property, vertex_kind, _, _),
     vertex_kind != "Symbol",
-    element_type = @getArrayElementType(array_type).
+    element_type = @getElementType(array_type).
 
 inferred_type(array, $Array(element_type)) :-
     inferred_type(array, $Array($Bottom())),

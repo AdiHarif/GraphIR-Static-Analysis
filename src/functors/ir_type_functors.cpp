@@ -13,8 +13,7 @@ extern "C" {
     RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
     RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
     RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
-    RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
-    RamDomain getObjectValueType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
+    RamDomain getElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getFunctionRetType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
     RamDomain getFunctionParamType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type, RamDomain index);
     RamDomain functionRetTemplate(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type);
@@ -494,22 +493,44 @@ RamDomain irTypeToString(SymbolTable* symbolTable, RecordTable* recordTable, Ram
     return symbolTable->encode(typeNames[t[0]]);
 }
 
-RamDomain getArrayElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
+RamDomain getElementType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
     const RamDomain* t = recordTable->unpack(type, maxArity);
-    if (t[0] == Array) {
-        return t[1];
-    }
-    const RamDomain bottom[2] = {Bottom, nil};
-    return recordTable->pack(bottom, 2);
-}
+    RamDomain ret[2] = {Bottom, nil};
 
-RamDomain getObjectValueType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
-    const RamDomain* t = recordTable->unpack(type, maxArity);
-    if (t[0] == Object) {
-        return t[1];
+    switch (t[0]) {
+        case Any:
+            ret[0] = Any;
+            break;
+        case Boolean:
+        case Bottom:
+        case Function:
+        case Integer:
+        case Null:
+        case Number:
+        case String:
+        case Tuple:
+        case Undefined:
+        case UserDefined:
+        case Void:
+            ret[0] = Bottom;
+            break;
+        case Object:
+        case Array:
+            return t[1];
+        case Union: {
+                const RamDomain* list = recordTable->unpack(t[1], maxArity);
+                RamDomain lub = getElementType(symbolTable, recordTable, list[0]);
+                while (list[1] != nil) {
+                    list = recordTable->unpack(list[1], maxArity);
+                    RamDomain element = getElementType(symbolTable, recordTable, list[0]);
+                    lub = irTypeLub(symbolTable, recordTable, lub, element);
+                }
+                return lub;
+            }
+        default:
+            throw std::runtime_error("Unexpected irType constructor");
     }
-    const RamDomain bottom[2] = {Bottom, nil};
-    return recordTable->pack(bottom, 2);
+    return recordTable->pack(ret, 2);
 }
 
 RamDomain getFunctionRetType(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type) {
