@@ -433,7 +433,7 @@ string joinTypeList(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     const RamDomain* type = recordTable->unpack(list, maxArity);
     string result = symbolTable->decode(irTypeToString(symbolTable, recordTable, type[0]));
     if (type[1] != nil) {
-        result += ", " + joinTypeList(symbolTable, recordTable, type[1]);
+        result += "," + joinTypeList(symbolTable, recordTable, type[1]);
     }
     return result;
 }
