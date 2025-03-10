@@ -4,15 +4,15 @@
 #include "ir_type.dl"
 #include "type_inference.dl"
 
-.decl global_variable(name: symbol, type: irType<>)
+.decl global_variable_type(name: symbol, type: irType<>)
 
 inferred_type(name, $UserDefined("Globals")) :-
     vertex(name, "Symbol", _, "_globals").
 
-global_variable(name, $Undefined()) :-
-    global_variable(name, _).
+global_variable_type(name, $Undefined()) :-
+    global_variable_type(name, _).
 
-global_variable(name, type) :-
+global_variable_type(name, type) :-
     vertex(store, "Store", _, _),
     edge(store, object, _, "object"),
     vertex(object, "Symbol", _, "_globals"),
@@ -27,5 +27,9 @@ inferred_type(load, type) :-
     vertex(object, "Symbol", _, "_globals"),
     edge(load, property, _, "property"),
     vertex(property, "Symbol", _, name),
-    global_variable(name, type).
+    global_variable_type(name, type).
 
+.decl global_variable(name: symbol, type_name: symbol)
+
+global_variable(name, @irTypeToString(type)) :-
+    global_variable_type(name, type).
