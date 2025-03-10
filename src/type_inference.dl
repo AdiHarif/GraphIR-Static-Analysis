@@ -10,11 +10,8 @@
 numeric_operator("+").
 numeric_operator("-").
 numeric_operator("*").
-numeric_operator("++ (Postfix)").
-numeric_operator("++ (Prefix)").
-numeric_operator("-- (Postfix)").
-numeric_operator("-- (Prefix)").
-numeric_operator("- (Prefix)").
+numeric_operator("++").
+numeric_operator("--").
 
 .decl float_operator(operator: symbol)
 float_operator("/").
@@ -41,7 +38,7 @@ comparison_operator(">=").
 .decl boolean_operator(operator: symbol)
 boolean_operator("&&").
 boolean_operator("||").
-boolean_operator("! (Prefix)").
+boolean_operator("!").
 
 .decl inferred_type(id: number, type: irType<>)
 inferred_type(id, $Integer()) :-
