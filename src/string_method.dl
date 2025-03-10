@@ -4,14 +4,13 @@
 #include "ir_type.dl"
 #include "libs/libs.dl"
 
-refers_to_function(v, full_name) :-
-    vertex(v, "Load", _, _),
-    edge(v, function_id, _, "property"),
-    vertex(function_id, "Symbol", _, method_name),
-    edge(v, string, _, "object"),
-    inferred_type(string, $String()),
-    lib_method("String", method_name, _),
-    full_name = cat("String_", method_name).
+inferred_type(load, type) :-
+    vertex(load, "Load", _, _),
+    edge(load, object, _, "object"),
+    inferred_type(object, $String()),
+    edge(load, property, _, "property"),
+    vertex(property, "Symbol", _, method_name),
+    lib_method("String", method_name, type).
 
 lib_method("String", "substring", $Function($String(), [$Integer(),[$Integer(), nil]])).
 lib_method("String", "charCodeAt", $Function($Integer(), [$Integer(), nil])).
