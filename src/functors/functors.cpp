@@ -16,8 +16,9 @@ int32_t is_numeric(const char* str) {
 
 int32_t is_integer(const char* str) {
     try {
-        std::stoi(str);
-        return 1;
+        int32_t n = std::stoi(str);
+        double d = std::stod(str);
+        return n == d;
     }
     catch (...) {
         return 0;
