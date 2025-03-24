@@ -7,7 +7,6 @@
 #include "ir_type.dl"
 
 .decl numeric_operator(operator: symbol)
-numeric_operator("+").
 numeric_operator("-").
 numeric_operator("*").
 numeric_operator("++").
@@ -62,6 +61,13 @@ inferred_type(id, arg_type) :-
     vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator),
     edge(id, arg, _, _), inferred_type(arg, arg_type).
 
+inferred_type(id, left_type), inferred_type(id, right_type) :-
+    vertex(id, "BinaryOperation", _, "+"), edge(id, left, _, "left"), edge(id, right, _, "right"),
+    inferred_type(left, left_type), inferred_type(right, right_type),
+    left_type = $Integer(), right_type = $Integer().
+
+inferred_type(id, $String()) :-
+    vertex(id, "BinaryOperation", _, "+"), edge(id, arg, _, _), inferred_type(arg, $String()).
 
 
 inferred_type(id, type) :-
