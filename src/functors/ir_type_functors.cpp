@@ -229,14 +229,148 @@ RamDomain type_set_contains(SymbolTable* symbolTable, RecordTable* recordTable, 
     return type_set_contains(symbolTable, recordTable, tl, value);
 }
 
+bool irTypeLatticeLte(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2) {
+    if (arg1 == arg2) {
+        return true;
+    }
+
+    const RamDomain* type1 = recordTable->unpack(arg1, maxArity);
+    const RamDomain* type2 = recordTable->unpack(arg2, maxArity);
+
+    if (type1[0] == Bottom) {
+        return true;
+    }
+    if (type2[0] == Bottom) {
+        return false;
+    }
+    if (type2[0] == Any) {
+        return true;
+    }
+    if (type1[0] == Any) {
+        return false;
+    }
+
+    if (type1[0] == Array && type2[0] == Array || type1[0] == Object && type2[0] == Object) {
+        return irTypeLatticeLte(symbolTable, recordTable, type1[1], type2[1]);
+    }
+
+    if (type1[0] == Union && type2[0] == Union) {
+        const RamDomain* set = recordTable->unpack(type1[1], maxArity);
+
+        while (set) {
+            RamDomain hd = set[0];
+            RamDomain tl = set[1];
+            if (!irTypeLatticeLte(symbolTable, recordTable, hd, arg2)) {
+                return false;
+            }
+            set = recordTable->unpack(tl, maxArity);
+        }
+        return true;
+    }
+
+    if (type2[0] == Union) {
+        const RamDomain* set = recordTable->unpack(type2[1], maxArity);
+
+        while (set) {
+            RamDomain hd = set[0];
+            RamDomain tl = set[1];
+            if (!irTypeLatticeLte(symbolTable, recordTable, arg1, hd)) {
+                return false;
+            }
+            set = recordTable->unpack(tl, maxArity);
+        }
+        return true;
+    }
+
+    if (type1[0] == Tuple && type2[0] == Tuple) {
+        const RamDomain* set1 = recordTable->unpack(type1[1], maxArity);
+        const RamDomain* set2 = recordTable->unpack(type1[1], maxArity);
+        while (true) {
+            if (!set1 && !set2) {
+                return true;
+            }
+            if (!set1 || !set2) {
+                return false;
+            }
+
+            RamDomain hd1 = set1[0];
+            RamDomain tl1 = set1[1];
+            RamDomain hd2 = set2[0];
+            RamDomain tl2 = set2[1];
+
+            if (!irTypeLatticeLte(symbolTable, recordTable, hd1, hd2)) {
+                return false;
+            }
+            set1 = recordTable->unpack(tl1, maxArity);
+            set2 = recordTable->unpack(tl1, maxArity);
+        }
+    }
+
+    if (type1[0] == Function && type2[0] == Function) {
+        const RamDomain* sig1 = recordTable->unpack(type1[1], 2);
+        const RamDomain* sig2 = recordTable->unpack(type2[1], 2);
+        if (irTypeLatticeLte(symbolTable, recordTable, sig1[0], sig2[0])) {
+            return false;
+        }
+
+        const RamDomain* set1 = recordTable->unpack(sig1[1], maxArity);
+        const RamDomain* set2 = recordTable->unpack(sig2[1], maxArity);
+
+        while (true) {
+            if (!set1 && !set2) {
+                return true;
+            }
+            if (!set1 || !set2) {
+                return false;
+            }
+
+            RamDomain hd1 = set1[0];
+            RamDomain tl1 = set1[1];
+            RamDomain hd2 = set2[0];
+            RamDomain tl2 = set2[1];
+
+            if (!irTypeLatticeLte(symbolTable, recordTable, hd1, hd2)) {
+                return false;
+            }
+            set1 = recordTable->unpack(tl1, maxArity);
+            set2 = recordTable->unpack(tl1, maxArity);
+        }
+    }
+
+    if (type1[0] == UserDefined && type2[0] == UserDefined) {
+        return symbolTable->decode(type1[1]) == symbolTable->decode(type2[1]);
+    }
+
+    if (type1[0] == Integer && type2[0] == Number) {
+        return true;
+    }
+
+    return type1[0] == type2[0];
+}
+
+RamDomain type_set_remove(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId, RamDomain value);
+
 RamDomain type_set_insert(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId, RamDomain value) {
     if (setId == 0) { // set is nil
         RamDomain newSet[2] = {value, 0};
         return recordTable->pack(newSet, 2);
     }
     const RamDomain* set = recordTable->unpack(setId, 2);
-    const RamDomain hd = set[0];
-    const RamDomain tl = set[1];
+    while (set) {
+        RamDomain hd = set[0];
+        RamDomain tl = set[1];
+        if (irTypeLatticeLte(symbolTable, recordTable, hd, value) || irTypeLatticeLte(symbolTable, recordTable, value, hd)) {
+            RamDomain newValue = irTypeLub(symbolTable, recordTable, hd, value);
+            RamDomain tmpSet = type_set_remove(symbolTable, recordTable, setId, hd);
+            return type_set_insert(symbolTable, recordTable, tmpSet, newValue);
+        }
+
+        set = recordTable->unpack(tl, 2);
+    }
+
+    set = recordTable->unpack(setId, 2);
+    RamDomain hd = set[0];
+    RamDomain tl = set[1];
     if (type_compare(symbolTable, recordTable, hd, value) == 0) {
         return setId;
     }
@@ -255,6 +389,26 @@ RamDomain type_set_insert(SymbolTable* symbolTable, RecordTable* recordTable, Ra
         return recordTable->pack(newSet, 2);
     }
 }
+
+RamDomain type_set_remove(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId, RamDomain value) {
+    if (setId == 0) {
+        return 0;
+    }
+    const RamDomain* set = recordTable->unpack(setId, 2);
+    RamDomain hd = set[0];
+    RamDomain tl = set[1];
+
+    if (type_compare(symbolTable, recordTable, hd, value) == 0) {
+        return tl;
+    }
+    if (type_compare(symbolTable, recordTable, hd, value) > 0) {
+        return setId;
+    }
+    RamDomain newTl = type_set_remove(symbolTable, recordTable, tl, value);
+    RamDomain newSet[2] = {hd, newTl};
+    return recordTable->pack(newSet, 2);
+}
+
 RamDomain irTypeListLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type1, RamDomain type2);
 
 RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain type1, RamDomain type2) {
