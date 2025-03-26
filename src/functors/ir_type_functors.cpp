@@ -274,12 +274,12 @@ bool irTypeLatticeLte(SymbolTable* symbolTable, RecordTable* recordTable, RamDom
         while (set) {
             RamDomain hd = set[0];
             RamDomain tl = set[1];
-            if (!irTypeLatticeLte(symbolTable, recordTable, arg1, hd)) {
-                return false;
+            if (irTypeLatticeLte(symbolTable, recordTable, arg1, hd)) {
+                return true;
             }
             set = recordTable->unpack(tl, maxArity);
         }
-        return true;
+        return false;
     }
 
     if (type1[0] == Tuple && type2[0] == Tuple) {
