@@ -1,5 +1,6 @@
 
 #include <exception>
+#include <cassert>
 
 #include <souffle/SouffleInterface.h>
 
@@ -537,9 +538,20 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     if (type1[0] == Union && type2[0] == Union) {
-        newType[0] = Union;
-        newType[1] = type_set_intersect(symbolTable, recordTable, type1[1], type2[1]);
-        return recordTable->pack(newType, 2);
+        RamDomain glb = recordTable->pack({Bottom, nil});
+        const RamDomain* set = recordTable->unpack(type1[1], 2);
+        while (set) {
+            const RamDomain hd = set[0];
+            const RamDomain tl = set[1];
+
+            RamDomain tmp = irTypeGlb(symbolTable, recordTable, hd, arg2);
+            glb = irTypeLub(symbolTable, recordTable, tmp, glb);
+
+            set = recordTable->unpack(tl, 2);
+        }
+        assert(irTypeLatticeLte(symbolTable, recordTable, glb, arg1));
+        assert(irTypeLatticeLte(symbolTable, recordTable, glb, arg2));
+        return glb;
     }
 
     if (type1[0] == Union) {
@@ -547,19 +559,25 @@ RamDomain irTypeGlb(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
             return arg2;
         }
         else {
-            newType[0] = Bottom;
-            return recordTable->pack(newType, 2);
+            RamDomain glb = recordTable->pack({Bottom, nil});
+            const RamDomain* set = recordTable->unpack(type1[1], 2);
+            while (set) {
+                const RamDomain hd = set[0];
+                const RamDomain tl = set[1];
+
+                RamDomain tmp = irTypeGlb(symbolTable, recordTable, hd, arg2);
+                glb = irTypeLub(symbolTable, recordTable, tmp, glb);
+
+                set = recordTable->unpack(tl, 2);
+            }
+            assert(irTypeLatticeLte(symbolTable, recordTable, glb, arg1));
+            assert(irTypeLatticeLte(symbolTable, recordTable, glb, arg2));
+            return glb;
         }
     }
 
     if (type2[0] == Union) {
-        if (type_set_contains(symbolTable, recordTable, type2[1], arg1)) {
-            return arg1;
-        }
-        else {
-            newType[0] = Bottom;
-            return recordTable->pack(newType, 2);
-        }
+        return irTypeGlb(symbolTable, recordTable, arg2, arg1);
     }
 
     if (type1[0] == Integer && type2[0] == Number) {
