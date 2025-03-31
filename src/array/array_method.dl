@@ -13,7 +13,31 @@ inferred_type(load, type) :-
     vertex(property, "Symbol", _, method_name),
     lib_method("Array", method_name, type).
 
+inferred_type(array, $Array(element_type)) :-
+    vertex(load, "Load", _, _),
+    edge(load, array_ref, _, "object"),
+    inferred_type(array_ref, $Array($Bottom())),
+    may_refer_to(array_ref, array),
+    edge(load, property, _, "property"),
+    vertex(property, "Symbol", _, "push"),
+
+    vertex(call, "Call", _, _),
+    edge(call, load, _, "callee"),
+    edge(call, param, _, "0"),
+    inferred_type(param, element_type).
+
+inferred_type(load, $Function($Integer(), [@getElementType(array_type), nil])) :-
+    vertex(load, "Load", _, _),
+    edge(load, object, _, "object"),
+    inferred_type(object, $Array($Bottom())),
+    inferred_type(object, array_type),
+    edge(load, property, _, "property"),
+    vertex(property, "Symbol", _, "push").
+
+
 lib_method("Array", "slice", $Function($Array($String()), [$Integer(), nil])).
 lib_method("Array", "join", $Function($String(), [$String(), nil])).
+lib_method("Array", "indexOf", $Function($Integer(), [$Any(), nil])).
+// lib_method("Array", "push", $Function($Integer(), [$Any(), nil])).
 
 getter("length", $Array($Any()), $Integer()).

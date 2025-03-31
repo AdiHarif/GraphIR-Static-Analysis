@@ -23,6 +23,7 @@ integer_operator(">>>").
 integer_operator("^").
 integer_operator("|").
 integer_operator("&").
+integer_operator("~").
 
 .decl comparison_operator(operator: symbol)
 comparison_operator("==").
@@ -59,12 +60,24 @@ inferred_type(id, $Integer()) :-
     vertex(id, kind, _, operator), match(".*Operation", kind), integer_operator(operator).
 inferred_type(id, arg_type) :-
     vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator),
-    edge(id, arg, _, _), inferred_type(arg, arg_type).
+    edge(id, arg, _, _), inferred_type(arg, arg_type), inferred_type(arg, $Integer()).
+inferred_type(id, $Number()) :-
+    vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator),
+    edge(id, arg, _, _), inferred_type(arg, $Undefined()).
 
-inferred_type(id, left_type), inferred_type(id, right_type) :-
+
+inferred_type(id, $Integer()) :-
     vertex(id, "BinaryOperation", _, "+"), edge(id, left, _, "left"), edge(id, right, _, "right"),
-    inferred_type(left, left_type), inferred_type(right, right_type),
-    left_type = $Integer(), right_type = $Integer().
+    inferred_type(left, $Integer()), inferred_type(right, $Integer()).
+
+inferred_type(id, $Number()) :-
+    vertex(id, "BinaryOperation", _, "+"),
+    edge(id, arg1, _, _), edge(id, arg2, _, _), arg1 != arg2,
+    inferred_type(arg1, $Number()), inferred_type(arg2, $Integer()).
+
+inferred_type(id, $Number()) :-
+    vertex(id, "BinaryOperation", _, "+"), edge(id, arg, _, _),
+    inferred_type(arg, $Undefined()).
 
 inferred_type(id, $String()) :-
     vertex(id, "BinaryOperation", _, "+"), edge(id, arg, _, _), inferred_type(arg, $String()).
@@ -134,6 +147,12 @@ inferred_type(object, $Object(value_type)) :-
     inferred_type(object, $Object($Bottom())),
     edge(store, value, _, "value"),
     inferred_type(value, value_type).
+
+inferred_type(load, @getElementType(type)) :-
+    vertex(load, "Load", _, _),
+    edge(load, object, _, "object"),
+    inferred_type(object, $Object($Bottom())),
+    inferred_type(object, type).
 
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).

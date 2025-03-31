@@ -86,4 +86,14 @@ inferred_type(array, type) :-
     vertex(callee, "Symbol", _, name),
     typed_array(name, type).
 
+// inferred_type(array, param_type) :-
+//     vertex(call, "Call", _, _),
+//     edge(call, param, _, index),
+//     IS_NUMERIC(index),
+//     inferred_type(param, $Array($Bottom())),
+//     edge(call, function, _, "callee"),
+//     inferred_type(function, function_type),
+//     param_type = @getFunctionParamType(function_type, to_number(index)),
+//     may_refer_to(param, array).
+
 #include "array_method.dl"
