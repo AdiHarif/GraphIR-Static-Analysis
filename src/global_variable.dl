@@ -29,6 +29,21 @@ inferred_type(load, type) :-
     vertex(property, "Symbol", _, name),
     global_variable_type(name, type).
 
+may_refer_to(load, value) :-
+    vertex(load, "Load", _, _),
+    edge(load, object1, _, "object"),
+    vertex(object1, "Symbol", _, "_globals"),
+    edge(load, property1, _, "property"),
+    vertex(property1, "Symbol", _, name),
+
+    vertex(store, "Store", _, _),
+    edge(store, object2, _, "object"),
+    vertex(object2, "Symbol", _, "_globals"),
+    edge(store, value, _, "value"),
+    edge(store, property2, _, "property"),
+    vertex(property2, "Symbol", _, name).
+
+
 .decl global_variable(name: symbol, type_name: symbol)
 
 global_variable(name, @irTypeToString(type)) :-
