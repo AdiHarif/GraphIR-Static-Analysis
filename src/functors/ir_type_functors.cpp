@@ -58,42 +58,6 @@ const size_t maxArity = 2;
 int type_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
 int tag_compare(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain arg1, RamDomain arg2);
 
-RamDomain type_set_union(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId1, RamDomain setId2) {
-    if (setId1 == nil) {
-        return setId2;
-    }
-    if (setId2 == nil) {
-        return setId1;
-    }
-
-    const RamDomain* set1 = recordTable->unpack(setId1, maxArity);
-    const RamDomain* set2 = recordTable->unpack(setId2, maxArity);
-
-    int cmp = type_compare(symbolTable, recordTable, set1[0], set2[0]);
-    if (cmp == 0) {
-        RamDomain newSet[2] = {set1[0], type_set_union(symbolTable, recordTable, set1[1], set2[1])};
-        return recordTable->pack(newSet, 2);
-    }
-
-    if (tag_compare(symbolTable, recordTable, set1[0], set2[0]) == 0) {
-        RamDomain newSet[2] = {
-            irTypeLub(symbolTable, recordTable, set1[0], set2[0]),
-            type_set_union(symbolTable, recordTable, set1[1], set2[1])
-        };
-        return recordTable->pack(newSet, 2);
-    }
-
-    if (cmp < 0) {
-        RamDomain newSet[2] = {set1[0], type_set_union(symbolTable, recordTable, set1[1], setId2)};
-        return recordTable->pack(newSet, 2);
-    }
-
-    if (cmp > 0) {
-        RamDomain newSet[2] = {set2[0], type_set_union(symbolTable, recordTable, setId1, set2[1])};
-        return recordTable->pack(newSet, 2);
-    }
-}
-
 RamDomain type_set_intersect(SymbolTable* symbolTable, RecordTable* recordTable, RamDomain setId1, RamDomain setId2) {
     if (setId1 == nil || setId2 == nil) {
         return nil;
@@ -444,8 +408,17 @@ RamDomain irTypeLub(SymbolTable* symbolTable, RecordTable* recordTable, RamDomai
     }
 
     if (t1[0] == Union && t2[0] == Union) {
-        RamDomain newType[2] = {Union, type_set_union(symbolTable, recordTable, t1[1], t2[1])};
-        return recordTable->pack(newType, 2);
+        RamDomain newSet = t2[1];
+        const RamDomain* set1 = recordTable->unpack(t1[1], 2);
+        while (set1) {
+            const RamDomain hd = set1[0];
+            const RamDomain tl = set1[1];
+
+            newSet = type_set_insert(symbolTable, recordTable, newSet, hd);
+
+            set1 = recordTable->unpack(tl, 2);
+        }
+        return recordTable->pack({Union, newSet});
     }
     if (t1[0] == Union) {
         if (type_set_contains(symbolTable, recordTable, t1[1], type2)) {
