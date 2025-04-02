@@ -15,6 +15,7 @@ inferred_type(load, type) :-
 lib_method("String", "substring", $Function($String(), [$Integer(),[$Integer(), nil]])).
 lib_method("String", "charCodeAt", $Function($Integer(), [$Integer(), nil])).
 lib_method("String", "fromCharCode", $Function($String(), [$Integer(), nil])).
+lib_method("String", "indexOf", $Function($Integer(), [$String(), nil])).
 
 inferred_type(load, $String()) :-
     vertex(load, "Load", _, _),

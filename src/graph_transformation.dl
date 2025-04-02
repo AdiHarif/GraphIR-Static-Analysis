@@ -31,6 +31,13 @@ graph_transformation("string.length", load) :-
     edge(load, method, _, "property"),
     vertex(method, "Symbol", _, "length").
 
+graph_transformation("string.indexOf", load) :-
+    vertex(load, "Load", _, _),
+    edge(load, array, _, "object"),
+    inferred_type(array, $String()),
+    edge(load, method, _, "property"),
+    vertex(method, "Symbol", _, "indexOf").
+
 graph_transformation("Array.length", load) :-
     vertex(load, "Load", _, _),
     edge(load, array, _, "object"),
