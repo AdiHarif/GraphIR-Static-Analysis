@@ -45,9 +45,3 @@ points_to(pointer, pointee, "*") :- // TODO: add field sensitivity
     vertex(pointee, "Allocation", _, _),
     may_refer_to(pointer_ref, pointer),
     may_refer_to(pointee_ref, pointee).
-
-points_to(pointer, pointee, "*") :- // TODO: add field sensitivity
-    vertex(pointer, "Allocation", _, _),
-    vertex(pointee, "Allocation", _, _),
-    may_refer_to(pointee, pointee_ref),
-    edge(pointer, pointee_ref, "Data", _).
