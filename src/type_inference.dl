@@ -148,6 +148,12 @@ inferred_type(object, $Object(value_type)) :-
     edge(store, value, _, "value"),
     inferred_type(value, value_type).
 
+inferred_type(load, @getElementType(type)) :-
+    vertex(load, "Load", _, _),
+    edge(load, object, _, "object"),
+    inferred_type(object, $Object($Bottom())),
+    inferred_type(object, type).
+
 inferred_type(id, type) :-
     may_refer_to(id, to), inferred_type(to, type).
 
