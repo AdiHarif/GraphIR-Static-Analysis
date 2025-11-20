@@ -1,0 +1,251 @@
+digraph {
+  subgraph "cluster_0" {
+    style = "dotted";
+    "0" [
+      label = "0 | Start";
+      shape = "diamond";
+    ];
+    "1" [
+      label = "1 | #add";
+      shape = "rectangle";
+    ];
+    "2" [
+      label = "2 | #_globals";
+      shape = "rectangle";
+    ];
+    "3" [
+      label = "3 | 42";
+      shape = "rectangle";
+    ];
+    "4" [
+      label = "4 | #x";
+      shape = "rectangle";
+    ];
+    "5" [
+      label = "5 | Store";
+      shape = "diamond";
+    ];
+    "6" [
+      label = "6 | 1";
+      shape = "rectangle";
+    ];
+    "7" [
+      label = "7 | #y";
+      shape = "rectangle";
+    ];
+    "8" [
+      label = "8 | Store";
+      shape = "diamond";
+    ];
+    "9" [
+      label = "9 | #console";
+      shape = "rectangle";
+    ];
+    "10" [
+      label = "10 | #log";
+      shape = "rectangle";
+    ];
+    "11" [
+      label = "11 | Load";
+      shape = "Mdiamond";
+    ];
+    "12" [
+      label = "12 | #x";
+      shape = "rectangle";
+    ];
+    "13" [
+      label = "13 | Load";
+      shape = "Mdiamond";
+    ];
+    "14" [
+      label = "14 | #y";
+      shape = "rectangle";
+    ];
+    "15" [
+      label = "15 | Load";
+      shape = "Mdiamond";
+    ];
+    "16" [
+      label = "16 | Call";
+      shape = "Mdiamond";
+    ];
+    "17" [
+      label = "17 | \"Sum: \"";
+      shape = "rectangle";
+    ];
+    "18" [
+      label = "18 | +";
+      shape = "rectangle";
+    ];
+    "19" [
+      label = "19 | Call";
+      shape = "Mdiamond";
+    ];
+    "20" [
+      label = "20 | Return";
+      shape = "diamond";
+    ];
+    subgraph "cluster_1" {
+      style = "dotted";
+      "21" [
+        label = "21 | Start";
+        shape = "diamond";
+      ];
+      "22" [
+        label = "22 | Parameter #0";
+        shape = "rectangle";
+      ];
+      "23" [
+        label = "23 | Parameter #1";
+        shape = "rectangle";
+      ];
+      "24" [
+        label = "24 | +";
+        shape = "rectangle";
+      ];
+      "25" [
+        label = "25 | Return";
+        shape = "diamond";
+      ];
+      "21" -> "25" [
+        label = "next";
+        arrowhead = "normal";
+      ];
+      "24" -> "22" [
+        label = "left";
+        arrowhead = "onormal";
+      ];
+      "24" -> "23" [
+        label = "right";
+        arrowhead = "onormal";
+      ];
+      "25" -> "24" [
+        label = "value";
+        arrowhead = "onormal";
+      ];
+    }
+    "0" -> "5" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "1" -> "21" [
+      label = "start";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "1" -> "22" [
+      label = "0";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "1" -> "23" [
+      label = "1";
+      arrowhead = "vee";
+      style = "dashed";
+    ];
+    "5" -> "8" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "5" -> "2" [
+      label = "object";
+      arrowhead = "onormal";
+    ];
+    "5" -> "4" [
+      label = "property";
+      arrowhead = "onormal";
+    ];
+    "5" -> "3" [
+      label = "value";
+      arrowhead = "onormal";
+    ];
+    "8" -> "11" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "8" -> "2" [
+      label = "object";
+      arrowhead = "onormal";
+    ];
+    "8" -> "7" [
+      label = "property";
+      arrowhead = "onormal";
+    ];
+    "8" -> "6" [
+      label = "value";
+      arrowhead = "onormal";
+    ];
+    "11" -> "13" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "11" -> "9" [
+      label = "object";
+      arrowhead = "onormal";
+    ];
+    "11" -> "10" [
+      label = "property";
+      arrowhead = "onormal";
+    ];
+    "13" -> "15" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "13" -> "2" [
+      label = "object";
+      arrowhead = "onormal";
+    ];
+    "13" -> "12" [
+      label = "property";
+      arrowhead = "onormal";
+    ];
+    "15" -> "16" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "15" -> "2" [
+      label = "object";
+      arrowhead = "onormal";
+    ];
+    "15" -> "14" [
+      label = "property";
+      arrowhead = "onormal";
+    ];
+    "16" -> "19" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "16" -> "1" [
+      label = "callee";
+      arrowhead = "onormal";
+    ];
+    "16" -> "13" [
+      label = "0";
+      arrowhead = "onormal";
+    ];
+    "16" -> "15" [
+      label = "1";
+      arrowhead = "onormal";
+    ];
+    "18" -> "17" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "18" -> "16" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "19" -> "20" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "19" -> "11" [
+      label = "callee";
+      arrowhead = "onormal";
+    ];
+    "19" -> "18" [
+      label = "0";
+      arrowhead = "onormal";
+    ];
+  }
+}

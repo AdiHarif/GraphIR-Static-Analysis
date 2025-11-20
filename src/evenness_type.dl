@@ -1,0 +1,17 @@
+#pragma once
+
+.type evennessType =
+    Even {}
+    | EvennesAny {}
+    | EvennesBottom {}
+    | Odd {}
+
+.functor evennessTypeLub(t1: evennessType, t2: evennessType): evennessType stateful
+.functor evennessTypeGlb(t1: evennessType, t2: evennessType): evennessType stateful
+
+.lattice evennessType<> {
+    Bottom -> $EvennesBottom(),
+    Lub -> @evennessTypeLub(_,_),
+    Glb -> @evennessTypeGlb(_,_),
+    Top -> $EvennesAny()
+}

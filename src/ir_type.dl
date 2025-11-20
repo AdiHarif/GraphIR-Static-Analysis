@@ -18,6 +18,7 @@
     | Tuple { element_types: irTypeList }
     | Undefined {}
     | Union { types: irTypeSet }
+    | UnsignedInteger {}
     | UserDefined { name: symbol }
     | Void {}
 

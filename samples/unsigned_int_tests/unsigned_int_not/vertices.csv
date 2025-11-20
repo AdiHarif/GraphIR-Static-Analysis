@@ -1,0 +1,10 @@
+0;Start;Control;Start
+1;Symbol;Data;_globals
+2;Literal;Data;42
+3;UnaryOperation;Data;~
+4;Literal;Data;1
+5;UnaryOperation;Data;-
+6;UnaryOperation;Data;~
+7;Literal;Data;1.5
+8;UnaryOperation;Data;~
+9;Return;Control;Return

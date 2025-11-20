@@ -1,0 +1,11 @@
+1	$UserDefined(Globals)
+2	$UnsignedInteger
+5	$UnsignedInteger
+6	$Integer
+9	$Number
+13	$Union([$Integer, [$Undefined, nil]])
+14	$Integer
+18	$Union([$Integer, [$Undefined, nil]])
+19	$Integer
+23	$Union([$Number, [$Undefined, nil]])
+24	$Number

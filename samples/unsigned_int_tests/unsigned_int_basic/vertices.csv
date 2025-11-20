@@ -1,0 +1,26 @@
+0;Start;Control;Start
+1;Symbol;Data;add
+2;Symbol;Data;_globals
+3;Literal;Data;42
+4;Symbol;Data;x
+5;Store;Control;Store
+6;Literal;Data;1
+7;Symbol;Data;y
+8;Store;Control;Store
+9;Symbol;Data;console
+10;Symbol;Data;log
+11;Load;Compound;Load
+12;Symbol;Data;x
+13;Load;Compound;Load
+14;Symbol;Data;y
+15;Load;Compound;Load
+16;Call;Compound;Call
+17;Literal;Data;"""Sum: """
+18;BinaryOperation;Data;+
+19;Call;Compound;Call
+20;Return;Control;Return
+21;Start;Control;Start
+22;Parameter;Data;0
+23;Parameter;Data;1
+24;BinaryOperation;Data;+
+25;Return;Control;Return

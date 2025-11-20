@@ -1,0 +1,65 @@
+digraph {
+  subgraph "cluster_0" {
+    style = "dotted";
+    "0" [
+      label = "0 | Start";
+      shape = "diamond";
+    ];
+    "1" [
+      label = "1 | #_globals";
+      shape = "rectangle";
+    ];
+    "2" [
+      label = "2 | 42";
+      shape = "rectangle";
+    ];
+    "3" [
+      label = "3 | -";
+      shape = "rectangle";
+    ];
+    "4" [
+      label = "4 | 1";
+      shape = "rectangle";
+    ];
+    "5" [
+      label = "5 | -";
+      shape = "rectangle";
+    ];
+    "6" [
+      label = "6 | -";
+      shape = "rectangle";
+    ];
+    "7" [
+      label = "7 | 1.5";
+      shape = "rectangle";
+    ];
+    "8" [
+      label = "8 | -";
+      shape = "rectangle";
+    ];
+    "9" [
+      label = "9 | Return";
+      shape = "diamond";
+    ];
+    "0" -> "9" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "3" -> "2" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "5" -> "4" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "6" -> "5" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "8" -> "7" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+  }
+}

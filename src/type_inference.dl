@@ -5,12 +5,17 @@
 #include "points_to.dl"
 #include "utilities.dl"
 #include "ir_type.dl"
+#include "evenness.dl"
+
+.functor unaryOpOnType(type: irType, op: symbol): irType stateful
+.functor binaryOpOnTypes(type1: irType, type2: irType, op: symbol): irType stateful
 
 .decl numeric_operator(operator: symbol)
 numeric_operator("-").
 numeric_operator("*").
 numeric_operator("++").
 numeric_operator("--").
+numeric_operator("**").
 
 .decl float_operator(operator: symbol)
 float_operator("/").
@@ -24,6 +29,12 @@ integer_operator("^").
 integer_operator("|").
 integer_operator("&").
 integer_operator("~").
+
+.decl any_numeric_operator(operator: symbol)
+any_numeric_operator(op) :- numeric_operator(op).
+any_numeric_operator(op) :- float_operator(op).
+any_numeric_operator(op) :- integer_operator(op).
+any_numeric_operator("+").
 
 .decl comparison_operator(operator: symbol)
 comparison_operator("==").
@@ -40,11 +51,18 @@ boolean_operator("&&").
 boolean_operator("||").
 boolean_operator("!").
 
+.decl numeric_type(type: irType<>)
+numeric_type($UnsignedInteger()).
+numeric_type($Integer()).
+numeric_type($Number()).
+
 .decl inferred_type(id: number, type: irType<>)
+inferred_type(id, $UnsignedInteger()) :-
+    vertex(id, "Literal", _, value), IS_UNSIGNED_INTEGER(value).
 inferred_type(id, $Integer()) :-
-    vertex(id, "Literal", _, value), IS_INTEGER(value).
+    vertex(id, "Literal", _, value), IS_INTEGER(value), !IS_UNSIGNED_INTEGER(value).
 inferred_type(id, $Number()) :-
-    vertex(id, "Literal", _, value), IS_NUMERIC(value), !IS_INTEGER(value).
+    vertex(id, "Literal", _, value), IS_NUMERIC(value), !IS_INTEGER(value), !IS_UNSIGNED_INTEGER(value).
 inferred_type(id, $String()) :-
     vertex(id, "Literal", _, value), IS_STRING(value).
 inferred_type(id, $Boolean()) :-
@@ -54,30 +72,46 @@ inferred_type(id, $Undefined()) :-
 inferred_type(id, $Null()) :-
     vertex(id, "Literal", _, "null").
 
-inferred_type(id, $Number()) :-
-    vertex(id, kind, _, operator), match(".*Operation", kind), float_operator(operator).
-inferred_type(id, $Integer()) :-
-    vertex(id, kind, _, operator), match(".*Operation", kind), integer_operator(operator).
-inferred_type(id, arg_type) :-
-    vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator),
-    edge(id, arg, _, _), inferred_type(arg, arg_type), inferred_type(arg, $Integer()).
-inferred_type(id, $Number()) :-
-    vertex(id, kind, _, operator), match(".*Operation", kind), numeric_operator(operator),
-    edge(id, arg, _, _), inferred_type(arg, $Undefined()).
 
+inferred_type(srcId, @unaryOpOnType(type, op)) :- 
+    any_numeric_operator(op),
+    numeric_type(type),
+    vertex(srcId, "UnaryOperation", _, op),
+    edge(srcId, dstId, "Data", "operand"),
+    inferred_type(dstId, type).
 
-inferred_type(id, $Integer()) :-
-    vertex(id, "BinaryOperation", _, "+"), edge(id, left, _, "left"), edge(id, right, _, "right"),
-    inferred_type(left, $Integer()), inferred_type(right, $Integer()).
+inferred_type(srcId, @binaryOpOnTypes(type1, type2, op)) :- 
+    vertex(srcId, "BinaryOperation", _, op),
+    any_numeric_operator(op),
+    op != "**",
+    edge(srcId, dstId1, "Data", "left"),
+    inferred_type(dstId1, type1),
+    edge(srcId, dstId2, "Data", "right"),
+    inferred_type(dstId2, type2),
+    numeric_type(type1),
+    numeric_type(type2).
 
-inferred_type(id, $Number()) :-
-    vertex(id, "BinaryOperation", _, "+"),
-    edge(id, arg1, _, _), edge(id, arg2, _, _), arg1 != arg2,
-    inferred_type(arg1, $Number()), inferred_type(arg2, $Integer()).
+inferred_type(srcId, $UnsignedInteger()) :- 
+    vertex(srcId, "BinaryOperation", _, op),
+    op = "**",
+    edge(srcId, dstId1, "Data", "left"),
+    inferred_type(dstId1, type1),
+    edge(srcId, dstId2, "Data", "right"),
+    inferred_type(dstId2, type2),
+    numeric_type(type1),
+    Evenness(dstId2, $Even()),
+    type2 = $UnsignedInteger().
 
-inferred_type(id, $Number()) :-
-    vertex(id, "BinaryOperation", _, "+"), edge(id, arg, _, _),
-    inferred_type(arg, $Undefined()).
+inferred_type(srcId, @binaryOpOnTypes(type1, type2, op)) :- 
+    vertex(srcId, "BinaryOperation", _, op),
+    op = "**",
+    edge(srcId, dstId2, "Data", "right"),
+    inferred_type(dstId2, type2),
+    edge(srcId, dstId1, "Data", "left"),
+    inferred_type(dstId1, type1),
+    Evenness(dstId2, evenness),
+    (evenness = $Odd() ; type2 = $Number() ; type2 = $Integer()),
+    numeric_type(type1).
 
 inferred_type(id, $String()) :-
     vertex(id, "BinaryOperation", _, "+"), edge(id, arg, _, _), inferred_type(arg, $String()).

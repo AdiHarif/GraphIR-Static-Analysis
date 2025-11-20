@@ -1,0 +1,39 @@
+#pragma once
+
+#include "evenness_type.dl"
+#include "utilities.dl"
+
+// .decl edge(src: number, dst: number, category: symbol, label: symbol)
+// .input edge(filename="edges.csv", delimiter=";")
+
+// .decl vertex(id: number, kind: symbol, category: symbol, label: symbol)
+// .input vertex(filename="vertices.csv", delimiter=";")
+
+.functor stof(value: symbol): number
+.functor unaryOpOnEvennessType(type: evennessType, op: symbol): evennessType stateful
+.functor binaryOpOnEvennessTypes(type1: evennessType, type2: evennessType, op: symbol): evennessType stateful
+.decl Evenness(id: number, type: evennessType<>)
+.output Evenness
+
+// ----- dealing with numeric literals -----
+Evenness(id, $Even()) :- vertex(id, "Literal", _, numAsStr), IS_INTEGER(numAsStr), @stof(numAsStr) % 2 = 0. 
+Evenness(id, $Odd()) :- vertex(id, "Literal", _, numAsStr), IS_INTEGER(numAsStr), @stof(numAsStr) % 2 != 0. 
+
+// ----- dealing with parameters -----
+Evenness(id, $EvennesBottom()) :- vertex(id, "Parameter", _, _).
+
+// ----- dealing with operations -----
+Evenness(srcId, @unaryOpOnEvennessType(type, op)) :- 
+    vertex(srcId, "UnaryOperation", _, op),
+    edge(srcId, dstId, "Data", "operand"),
+    vertex(dstId, _, "Data", _),
+    Evenness(dstId, type).
+
+Evenness(srcId, @binaryOpOnEvennessTypes(type1, type2, op)) :- 
+    vertex(srcId, "BinaryOperation", _, op),
+    edge(srcId, dstId1, "Data", "left"),
+    vertex(dstId1, _, "Data", _),
+    Evenness(dstId1, type1),
+    edge(srcId, dstId2, "Data", "right"),
+    vertex(dstId2, _, "Data", _),
+    Evenness(dstId2, type2).

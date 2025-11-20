@@ -26,4 +26,12 @@ int32_t is_integer(const char* str) {
 
 }
 
+int32_t is_unsigned_integer(const char* str) {
+    if(is_integer(str))
+    {
+        return std::stoi(str) >= 0;
+    }
+    return 0;
+}
+
 }

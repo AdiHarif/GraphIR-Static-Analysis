@@ -6,3 +6,7 @@ libfunctors.dylib
 
 # Output files
 out
+
+/.vscode
+*.out
+*.txt

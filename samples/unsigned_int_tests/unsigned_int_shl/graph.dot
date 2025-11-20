@@ -1,0 +1,249 @@
+digraph {
+  subgraph "cluster_0" {
+    style = "dotted";
+    "0" [
+      label = "0 | Start";
+      shape = "diamond";
+    ];
+    "1" [
+      label = "1 | #_globals";
+      shape = "rectangle";
+    ];
+    "2" [
+      label = "2 | 42";
+      shape = "rectangle";
+    ];
+    "3" [
+      label = "3 | 42";
+      shape = "rectangle";
+    ];
+    "4" [
+      label = "4 | <<";
+      shape = "rectangle";
+    ];
+    "5" [
+      label = "5 | 1";
+      shape = "rectangle";
+    ];
+    "6" [
+      label = "6 | -";
+      shape = "rectangle";
+    ];
+    "7" [
+      label = "7 | 42";
+      shape = "rectangle";
+    ];
+    "8" [
+      label = "8 | <<";
+      shape = "rectangle";
+    ];
+    "9" [
+      label = "9 | 1.5";
+      shape = "rectangle";
+    ];
+    "10" [
+      label = "10 | 42";
+      shape = "rectangle";
+    ];
+    "11" [
+      label = "11 | <<";
+      shape = "rectangle";
+    ];
+    "12" [
+      label = "12 | 42";
+      shape = "rectangle";
+    ];
+    "13" [
+      label = "13 | 1";
+      shape = "rectangle";
+    ];
+    "14" [
+      label = "14 | -";
+      shape = "rectangle";
+    ];
+    "15" [
+      label = "15 | <<";
+      shape = "rectangle";
+    ];
+    "16" [
+      label = "16 | 1";
+      shape = "rectangle";
+    ];
+    "17" [
+      label = "17 | -";
+      shape = "rectangle";
+    ];
+    "18" [
+      label = "18 | 1";
+      shape = "rectangle";
+    ];
+    "19" [
+      label = "19 | -";
+      shape = "rectangle";
+    ];
+    "20" [
+      label = "20 | <<";
+      shape = "rectangle";
+    ];
+    "21" [
+      label = "21 | 1.5";
+      shape = "rectangle";
+    ];
+    "22" [
+      label = "22 | 1";
+      shape = "rectangle";
+    ];
+    "23" [
+      label = "23 | -";
+      shape = "rectangle";
+    ];
+    "24" [
+      label = "24 | <<";
+      shape = "rectangle";
+    ];
+    "25" [
+      label = "25 | 42";
+      shape = "rectangle";
+    ];
+    "26" [
+      label = "26 | 1.5";
+      shape = "rectangle";
+    ];
+    "27" [
+      label = "27 | <<";
+      shape = "rectangle";
+    ];
+    "28" [
+      label = "28 | 1";
+      shape = "rectangle";
+    ];
+    "29" [
+      label = "29 | -";
+      shape = "rectangle";
+    ];
+    "30" [
+      label = "30 | 1.5";
+      shape = "rectangle";
+    ];
+    "31" [
+      label = "31 | <<";
+      shape = "rectangle";
+    ];
+    "32" [
+      label = "32 | 1.5";
+      shape = "rectangle";
+    ];
+    "33" [
+      label = "33 | 1.5";
+      shape = "rectangle";
+    ];
+    "34" [
+      label = "34 | <<";
+      shape = "rectangle";
+    ];
+    "35" [
+      label = "35 | Return";
+      shape = "diamond";
+    ];
+    "0" -> "35" [
+      label = "next";
+      arrowhead = "normal";
+    ];
+    "4" -> "3" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "4" -> "2" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "6" -> "5" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "8" -> "7" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "8" -> "6" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "11" -> "10" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "11" -> "9" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "14" -> "13" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "15" -> "14" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "15" -> "12" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "17" -> "16" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "19" -> "18" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "20" -> "19" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "20" -> "17" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "23" -> "22" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "24" -> "23" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "24" -> "21" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "27" -> "26" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "27" -> "25" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "29" -> "28" [
+      label = "operand";
+      arrowhead = "onormal";
+    ];
+    "31" -> "30" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "31" -> "29" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+    "34" -> "33" [
+      label = "left";
+      arrowhead = "onormal";
+    ];
+    "34" -> "32" [
+      label = "right";
+      arrowhead = "onormal";
+    ];
+  }
+}

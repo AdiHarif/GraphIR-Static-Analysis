@@ -1,0 +1,9 @@
+1	$Function($UnsignedInteger, nil)
+2	$UserDefined(Globals)
+3	$UnsignedInteger
+8	$Union([$Undefined, [$UnsignedInteger, nil]])
+9	$Array($Bottom)
+13	$Union([$Array($Bottom), [$Undefined, nil]])
+14	$UnsignedInteger
+15	$Bottom
+20	$UnsignedInteger

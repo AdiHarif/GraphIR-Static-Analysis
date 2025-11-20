@@ -1,0 +1,14 @@
+1	$Function($UnsignedInteger, [$Union([$Undefined, [$UnsignedInteger, nil]]), [$Union([$Undefined, [$UnsignedInteger, nil]]), nil]])
+2	$UserDefined(Globals)
+3	$UnsignedInteger
+6	$UnsignedInteger
+11	$Function($Void, [$String, nil])
+13	$Union([$Undefined, [$UnsignedInteger, nil]])
+15	$Union([$Undefined, [$UnsignedInteger, nil]])
+16	$UnsignedInteger
+17	$String
+18	$String
+19	$Void
+22	$Union([$Undefined, [$UnsignedInteger, nil]])
+23	$Union([$Undefined, [$UnsignedInteger, nil]])
+24	$UnsignedInteger
